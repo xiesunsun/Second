@@ -1,0 +1,35 @@
+\begin{table}[!t]
+\centering
+\begin{threeparttable}
+\caption{LLM Query Cost and Stochastic Prompt Stability}
+\label{tab:efficiency_stability}
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\renewcommand{\arraystretch}{1.07}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\multicolumn{5}{@{}l}{\textbf{Offline LLM Query and Token Cost}} \\
+\addlinespace[2pt]
+Algorithm & Calls\tnote{a} & Out. Tok. & Peak Tok. & API (s) \\
+\midrule
+LLM-Select (Score) / LSP & 3.2 / 26 & 1,054.3 & 10,387 & 27.6 \\
+LLM-Lasso                & 3.2 / 26 &   777.8 &  7,817 & 31.3 \\
+\midrule
+SP-PD                    & \textbf{1.0 / 1} & \textbf{59.3} & \textbf{68} & \textbf{13.8} \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Five-Run Prompt Stability (Mean $\pm$ SD \%)}} \\
+\addlinespace[2pt]
+ & \multicolumn{2}{c}{$n = 3$} & \multicolumn{2}{c}{$n = 30$} \\
+\cmidrule(lr){2-3} \cmidrule(l){4-5}
+Algorithm & Aln. & Mis. & Aln. & Mis. \\
+\midrule
+LLM-Select (Rank) & \textbf{56.14}$\pm$0.45 & 51.38$\pm$0.12 & \textbf{63.53}$\pm$0.62 & 54.29$\pm$0.22 \\
+SP-PD             & 55.09$\pm$\textbf{0.16} & \textbf{54.64}$\pm$\textbf{0.10} & 61.77$\pm$\textbf{0.25} & \textbf{60.72}$\pm$\textbf{0.05} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] Mean / maximum batched offline calls across the 12 clinical datasets; native per-feature prompting for LLM-Select (Score) requires 78.9 mean and 753 maximum calls. Stability is evaluated over five independent prompts on six clinical datasets.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

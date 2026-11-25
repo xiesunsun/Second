@@ -1,0 +1,17 @@
+n	method	zero_count	total	zero_rate
+3	llm_lasso_correct	70	240	0.2917
+3	llm_lasso_wrong	75	240	0.3125
+3	lsp_adapted_correct	48	240	0.2000
+3	lsp_adapted_wrong	49	240	0.2042
+10	llm_lasso_correct	18	240	0.0750
+10	llm_lasso_wrong	16	240	0.0667
+10	lsp_adapted_correct	13	240	0.0542
+10	lsp_adapted_wrong	14	240	0.0583
+20	llm_lasso_correct	7	240	0.0292
+20	llm_lasso_wrong	9	240	0.0375
+20	lsp_adapted_correct	3	240	0.0125
+20	lsp_adapted_wrong	5	240	0.0208
+30	llm_lasso_correct	4	240	0.0167
+30	llm_lasso_wrong	5	240	0.0208
+30	lsp_adapted_correct	4	240	0.0167
+30	lsp_adapted_wrong	4	240	0.0167

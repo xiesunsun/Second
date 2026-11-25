@@ -1,0 +1,18 @@
+\subsection{Ablation Study, Parameter Sensitivity, and Efficiency Analysis}
+\label{sec:exp_ablation}
+
+\input{tables/tab6_ablation}
+\input{tables/tab7_efficiency_stability}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_ablation_sensitivity_cost.pdf}
+\caption{Component ablation impact, hyperparameter sensitivity, delivery runtime trade-off, and $O(1)$ versus $O(p)$ LLM token scaling.}
+\label{fig:ablation_sens_cost}
+\end{figure*}
+
+As shown in Table~\ref{tab:ablation} and Fig.~\ref{fig:ablation_sens_cost}(a), removing any single module of SP-PD degrades generalization across all three classifiers on the 12 clinical datasets. Dropping the offline semantic prior reduces SP-PD to a purely data-driven selector and significantly lowers NC, LR, and RF means. Removing evolutionary search collapses misaligned accuracy by 6.56 percentage points, yielding significant drops on every classifier. Disabling prior regularization at $\lambda = 0$ preserves misaligned recovery but forfeits 0.74 percentage points under aligned priors, significantly lowering all three means. Restricting delivery to one pairing at $R = 1$ raises validation variance and reduces misaligned recovery by 0.25 percentage points. On the 23 high-dimensional benchmark groups, removing error-guided search drops macro-precision by 0.90 percentage points and macro-F1 by 0.79 percentage points, while removing tree-union proposals degrades all terminal metrics at $B = 1{,}000$.
+
+Fig.~\ref{fig:ablation_sens_cost}(b) shows how $\lambda$ governs the balance between prior exploitation and correction. As $\lambda$ increases from 0 to 1.50, aligned BA rises monotonically while the shaded prior-shift gap widens; overall mean BA stays stable across $[0.25, 1.00]$ and peaks at $\lambda = 0.5$ with 66.25\%. Excessive regularization at $\lambda = 1.50$ impedes correction and drags misaligned BA down to 64.06\%. In Fig.~\ref{fig:ablation_sens_cost}(c), both NC and LR mean BA peak at $R = 10$, where delivery adds 1.00~s on top of 0.35~s search time per clinical run. Increasing $R$ to 20 doubles delivery time without further gain. On the high-dimensional benchmarks in Table~\ref{tab:ablation}, SP-PD averages 4.43~s of CPU time per run at $B = 1{,}000$, adding 1.27~s over random search while raising macro-precision by 0.90 percentage points.
+
+Because SP-PD requests only one offline feature ranking per dataset, Table~\ref{tab:efficiency_stability} and Fig.~\ref{fig:ablation_sens_cost}(d) confirm strictly $O(1)$ query scaling. Across all 12 clinical datasets, SP-PD uses one API call and 59.3 output tokens on average, peaking at 68 tokens on voice at $p = 753$. By contrast, LLM-Lasso and LLM-Select (Score) output per-feature weights or scores that scale as $O(p)$, peaking at 7,817 and 10,387 tokens on voice, up to 153 times higher than SP-PD, while native LLM-Select (Score) needs 753 calls. On six clinical datasets across five independent LLM runs at $T = 0$ and $T = 0.3$, SP-PD cuts across-prompt standard deviation by 60\% under aligned priors and 77\% under misaligned priors at $n = 30$. Evolutionary search and repeated-pairing delivery thus dampen LLM sampling variance.

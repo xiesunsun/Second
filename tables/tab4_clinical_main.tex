@@ -1,0 +1,41 @@
+\begin{table*}[!t]
+\centering
+\begin{threeparttable}
+\caption{Balanced Accuracy (\%) and Friedman Ranks on the 12 Clinical Datasets ($K = 4$, $B = 128$)}
+\label{tab:clinical_main}
+\scriptsize
+\setlength{\tabcolsep}{6.0pt}
+\renewcommand{\arraystretch}{1.07}
+\begin{tabular}{@{}lrrrr@{\hspace{14pt}}rrrr@{\hspace{14pt}}rr@{}}
+\toprule
+ & \multicolumn{4}{c}{Aligned Prior} & \multicolumn{4}{c}{Misaligned Prior\tnote{a}} & Mean & \\
+\cmidrule(lr{14pt}){2-5} \cmidrule(lr{14pt}){6-9}
+Algorithm & $n{=}3$ & $n{=}10$ & $n{=}20$ & $n{=}30$ &
+$n{=}3$ & $n{=}10$ & $n{=}20$ & $n{=}30$ & ($n{=}30$) & Rank\tnote{b} \\
+\midrule
+GA                 & 56.94\rlap{\textsuperscript{*}} & 61.56 & 63.64 & 65.04\rlap{\textsuperscript{*}} & -- & -- & -- & -- & 65.04\rlap{\textsuperscript{*}} & 8.08 \\
+BPSO               & 57.42 & 61.52 & 63.47 & 65.35 & -- & -- & -- & -- & 65.35 & 7.42 \\
+EDA                & 57.16 & 61.51 & 63.41\rlap{\textsuperscript{*}} & 65.13\rlap{\textsuperscript{*}} & -- & -- & -- & -- & 65.13 & 8.17 \\
+MEL                & 57.89 & 62.09 & 63.83 & 65.80 & -- & -- & -- & -- & 65.80 & 7.42 \\
+mRMR               & 57.31 & 61.36 & 63.62 & 65.53\rlap{\textsuperscript{*}} & -- & -- & -- & -- & 65.53 & 7.58 \\
+ReliefF            & 57.96 & 62.62 & 64.59 & 65.04\rlap{\textsuperscript{*}} & -- & -- & -- & -- & 65.04\rlap{\textsuperscript{*}} & 9.00 \\
+L1-LR              & 57.79 & 61.79 & 63.57\rlap{\textsuperscript{*}} & 65.53\rlap{\textsuperscript{*}} & -- & -- & -- & -- & 65.53 & 7.75 \\
+RF-Imp             & 57.92 & 61.98 & 64.03 & 65.08 & -- & -- & -- & -- & 65.08 & 7.25 \\
+\midrule
+$\pi$BO            & 58.03 & 62.40 & 63.98\rlap{\textsuperscript{*}} & 66.21 & 56.78 & 61.38 & 62.90 & 64.74 & 65.48 & 6.25 \\
+LLM-Lasso          & 59.04 & 63.09 & 65.01 & 66.30 & 57.04 & 61.39 & 63.30 & 65.16 & 65.73 & 6.33 \\
+LSP                & 58.36 & 62.58 & 64.49 & 66.06 & 57.59 & 61.44 & \textbf{63.77} & 65.13 & 65.60 & 6.67 \\
+LLM-Select (Rank)  & 60.40 & 64.59 & 66.19 & 66.97 & 54.75\rlap{\textsuperscript{*}} & 57.72\rlap{\textsuperscript{*}} & 59.22 & 59.29\rlap{\textsuperscript{*}} & 63.13\rlap{\textsuperscript{*}} & 10.29 \\
+LLM-Select (Score) & \textbf{60.94} & \textbf{65.10} & \textbf{66.90} & \textbf{67.59} & 55.20\rlap{\textsuperscript{*}} & 58.10 & 59.39 & 59.22\rlap{\textsuperscript{*}} & 63.40\rlap{\textsuperscript{*}} & 8.54 \\
+\midrule
+SP-PD              & 58.66 & 62.54 & 64.68 & 66.65 & \textbf{57.90} & \textbf{61.68} & 63.74 & \textbf{65.85} & \textbf{66.25} & \textbf{4.25} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] Prior-independent baselines (GA through RF-Imp) are invariant to prior alignment and repeat their aligned values under misaligned priors; bold marks the best result per column (among prior-informed methods in misaligned columns with dashes).
+\item[b] Mean ($n = 30$) is the unweighted average of aligned and misaligned BA at $n = 30$; Rank reports the corresponding Friedman average rank (lower is better).
+\item[*] SP-PD significantly outperforms the comparison algorithm (Wilcoxon signed-rank test, $\alpha = 0.05$).
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

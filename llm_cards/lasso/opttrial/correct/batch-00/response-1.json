@@ -1,0 +1,38 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"penalties\": {\"F0\": 2, \"F1\": 4, \"F2\": 1, \"F3\": 1, \"F4\": 2, \"F5\": 2, \"F6\": 3, \"F7\": 2, \"F8\": 3, \"F9\": 1, \"F10\": 2, \"F11\": 2, \"F12\": 3, \"F13\": 3, \"F14\": 3, \"F15\": 3}}",
+            "thoughtSignature": "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"
+          }
+        ]
+      },
+      "finishReason": "STOP"
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 501,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 1304,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 501
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ],
+    "thoughtsTokenCount": 680
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "createTime": "2026-11-24T03:09:44.212288Z",
+  "responseId": "-P8Ea8D6DPmBkuEPl-3Z8AY"
+}

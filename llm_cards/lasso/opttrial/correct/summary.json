@@ -1,0 +1,1 @@
+{"kind":"correct","method":"llm_lasso","model":"gemini-3.8-flash","n_calls":1,"output_tokens":123,"p":16,"penalties":[2,4,1,1,2,2,3,2,3,1,2,2,3,3,3,3],"prompt_tokens":501,"schema":"29ad69b4a68c5eab7220245cc333e10926175d46db71e28175cabbd52e4e6750","seconds":7.084094292000032,"task":"opttrial","thoughts_tokens":680,"total_tokens":1304}

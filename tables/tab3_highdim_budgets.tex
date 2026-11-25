@@ -1,0 +1,34 @@
+\begin{table*}[!t]
+\centering
+\begin{threeparttable}
+\caption{Multi-Budget Results on High-Dimensional Benchmarks}
+\label{tab:highdim_budgets}
+\scriptsize
+\setlength{\tabcolsep}{6.6pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrrr@{\hspace{18pt}}rrrrrr@{}}
+\toprule
+ & \multicolumn{4}{c}{$K = \lfloor 0.15p \rfloor$ (13 Groups)} & \multicolumn{6}{c}{$K = 8$ (23 Groups)} \\
+\cmidrule(lr{18pt}){2-5} \cmidrule(l){6-11}
+Algorithm & $B{=}128$ & $B{=}500$ & BA & F1 &
+$B{=}128$ & $B{=}500$ & $B{=}1{,}000$ & BA & F1 & Rank \\
+\midrule
+GA      & 82.31\rlap{\textsuperscript{*}} & 84.02\rlap{\textsuperscript{*}} & 79.27 & 80.08\rlap{\textsuperscript{*}} & 65.60\rlap{\textsuperscript{*}} & 68.90\rlap{\textsuperscript{*}} & 69.99\rlap{\textsuperscript{*}} & 64.49\rlap{\textsuperscript{*}} & 63.90\rlap{\textsuperscript{*}} & 5.57 \\
+BPSO    & 84.80 & 85.86 & 80.21 & 81.10 & 68.67\rlap{\textsuperscript{*}} & 72.12\rlap{\textsuperscript{*}} & 72.68\rlap{\textsuperscript{*}} & 66.38\rlap{\textsuperscript{*}} & 65.85\rlap{\textsuperscript{*}} & 4.83 \\
+EDA     & 82.72 & 85.19 & 81.42 & 82.07\rlap{\textsuperscript{*}} & 67.49\rlap{\textsuperscript{*}} & 71.89\rlap{\textsuperscript{*}} & 72.48\rlap{\textsuperscript{*}} & 67.16\rlap{\textsuperscript{*}} & 66.94\rlap{\textsuperscript{*}} & 4.48 \\
+MEL     & 85.95 & 85.83\rlap{\textsuperscript{*}} & 81.79 & 82.61\rlap{\textsuperscript{*}} & 76.47 & 76.39 & 76.19 & 70.99 & 71.63 & 3.30 \\
+mRMR    & 85.58 & 85.58 & 81.27 & 81.99\rlap{\textsuperscript{*}} & 71.99\rlap{\textsuperscript{*}} & 71.99\rlap{\textsuperscript{*}} & 71.99\rlap{\textsuperscript{*}} & 68.59\rlap{\textsuperscript{*}} & 68.15\rlap{\textsuperscript{*}} & 4.43 \\
+ReliefF & 84.60 & 84.60\rlap{\textsuperscript{*}} & 80.89 & 81.35\rlap{\textsuperscript{*}} & 60.36\rlap{\textsuperscript{*}} & 60.36\rlap{\textsuperscript{*}} & 60.36\rlap{\textsuperscript{*}} & 56.52\rlap{\textsuperscript{*}} & 53.83\rlap{\textsuperscript{*}} & 7.78 \\
+L1-LR   & 83.88 & 83.88 & 80.88 & 81.27 & 66.90\rlap{\textsuperscript{*}} & 66.90\rlap{\textsuperscript{*}} & 66.90\rlap{\textsuperscript{*}} & 62.53\rlap{\textsuperscript{*}} & 61.34\rlap{\textsuperscript{*}} & 6.39 \\
+RF-Imp  & 85.23\rlap{\textsuperscript{*}} & 85.23\rlap{\textsuperscript{*}} & 81.42 & 81.61\rlap{\textsuperscript{*}} & 71.22\rlap{\textsuperscript{*}} & 71.22\rlap{\textsuperscript{*}} & 71.22\rlap{\textsuperscript{*}} & 67.80\rlap{\textsuperscript{*}} & 67.64\rlap{\textsuperscript{*}} & 5.48 \\
+\midrule
+SP-PD   & \textbf{87.12} & \textbf{87.88} & \textbf{83.88} & \textbf{84.76} & \textbf{76.61} & \textbf{76.53} & \textbf{76.52} & \textbf{71.98} & \textbf{72.46} & \textbf{2.74} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item Budget columns report mean macro-precision (\%); BA, F1, and Friedman Rank are evaluated at $B = 1{,}000$.
+\item[*] SP-PD significantly outperforms the comparison algorithm (Wilcoxon signed-rank test, $\alpha = 0.05$).
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

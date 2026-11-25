@@ -1,0 +1,38 @@
+\begin{table}[!t]
+\centering
+\begin{threeparttable}
+\caption{Component Ablation Study of SP-PD}
+\label{tab:ablation}
+\scriptsize
+\setlength{\tabcolsep}{3.8pt}
+\renewcommand{\arraystretch}{1.07}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Clinical Datasets ($n = 30$, $K = 4$, $B = 128$)}} \\
+\addlinespace[2pt]
+Variant & Aln. & Mis. & Mean\tnote{a} & LR\tnote{a} & RF\tnote{a} \\
+\midrule
+w/o Prior                      & 65.87 & 65.87 & 65.87\rlap{\textsuperscript{*}} & 65.55\rlap{\textsuperscript{*}} & 63.20\rlap{\textsuperscript{*}} \\
+w/o Search                     & \textbf{66.97} & 59.29 & 63.13\rlap{\textsuperscript{*}} & 62.78\rlap{\textsuperscript{*}} & 61.26\rlap{\textsuperscript{*}} \\
+w/o Prior Reg. ($\lambda{=}0$) & 65.91 & \textbf{65.96} & 65.94\rlap{\textsuperscript{*}} & 65.55\rlap{\textsuperscript{*}} & 63.26\rlap{\textsuperscript{*}} \\
+w/o Rep. Pairing ($R{=}1$)     & 66.62 & 65.60 & 66.11 & 65.65 & 63.60 \\
+\midrule
+SP-PD                          & 66.65 & 65.85 & \textbf{66.25} & \textbf{65.75} & \textbf{63.67} \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{High-Dimensional Benchmarks ($K = 8$, $B = 1{,}000$)}} \\
+\addlinespace[2pt]
+Variant & $B{=}128$ & $B{=}1{,}000$ & BA & F1 & CPU (s) \\
+\midrule
+w/o Error-Guided Search   & 76.08 & 75.62 & 71.39 & 71.67 & \textbf{3.16} \\
+w/o Tree-Union Proposal   & 76.21 & 76.11 & 71.56 & 72.02 & 4.34 \\
+\midrule
+SP-PD                     & \textbf{76.61} & \textbf{76.52} & \textbf{71.98} & \textbf{72.46} & 4.43 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] Aln., Mis., and Mean report NC BA (\%); LR and RF report unweighted aligned/misaligned mean BA (\%) at $n = 30$. High-dimensional columns report macro-precision (\%), BA (\%), macro-F1 (\%), and mean CPU time across 23 groups.
+\item[*] SP-PD significantly outperforms the ablated variant (Wilcoxon, $\alpha = 0.05$).
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

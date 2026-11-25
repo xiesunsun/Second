@@ -1,0 +1,21 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+compile.log
+
+# Rendered preview PNGs
+page_*.png
+
+# OS & Python cache
+.DS_Store
+._*
+__pycache__/
+*.py[cod]
+*.tmp

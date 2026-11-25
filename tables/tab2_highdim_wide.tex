@@ -1,0 +1,39 @@
+\begin{table*}[!t]
+\centering
+\begin{threeparttable}
+\caption{Macro-Precision (\%) on High-Dimensional Benchmarks ($K = \lfloor 0.15p \rfloor$, $B = 1{,}000$)}
+\label{tab:highdim_wide}
+\scriptsize
+\setlength{\tabcolsep}{7.0pt}
+\renewcommand{\arraystretch}{1.06}
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+\toprule
+Dataset & GA & BPSO & EDA & MEL & mRMR & ReliefF & L1-LR & RF-Imp & SP-PD \\
+\midrule
+arcene                    & 80.73 & 83.00 & 79.74 & 75.70 & 81.26 & \textbf{83.59} & 77.81 & 80.85 & 80.80 \\
+Gutenberg                 & 57.66 & 68.46 & 68.41 & 67.08 & \textbf{73.13} & 58.34 & 61.96 & 63.20 & 71.91 \\
+DrivFace                  & \textbf{93.24} & 91.92 & 89.51 & 90.55 & 89.05 & 89.89 & 86.87 & 88.55 & 91.94 \\
+DLBCL/Lymphoma\tnote{a} & 76.24 & 76.74 & 80.72 & 81.61 & 80.26 & 81.46 & 81.25 & 80.20 & \textbf{85.73} \\
+relathe                   & 79.34 & 80.32 & 80.99 & 81.97 & 79.85 & 78.93 & 82.68 & 79.14 & \textbf{84.19} \\
+lung                      & 88.21 & 94.10 & 86.80 & \textbf{96.48} & 93.83 & 95.91 & 94.92 & 92.44 & 91.71 \\
+warpPIE10P                & 90.61 & 87.70 & 87.72 & 92.06 & 95.88 & \textbf{96.53} & 94.93 & 93.08 & 94.51 \\
+malware                   & 97.20 & 98.23 & 98.23 & \textbf{98.61} & 87.59 & 94.61 & 95.61 & 94.61 & 97.17 \\
+COIL20                    & 97.73 & 97.35 & \textbf{98.57} & 97.93 & 96.31 & 96.85 & 97.74 & 97.49 & 97.44 \\
+ORL                       & 82.44 & 85.45 & 84.20 & 83.85 & 84.74 & 78.24 & \textbf{86.66} & 83.67 & 83.32 \\
+CNAE-9                    & 87.03 & 84.91 & \textbf{89.40} & 85.91 & 88.48 & 84.64 & 86.91 & 85.43 & 88.86 \\
+isolet                    & 83.98 & 83.66 & 87.25 & 87.29 & 82.08 & 77.37 & 86.85 & 85.13 & \textbf{87.92} \\
+madelon                   & 81.50 & 83.81 & 86.64 & 83.31 & 80.03 & 83.48 & 56.21 & 84.18 & \textbf{88.29} \\
+\midrule
+Mean                      & 84.30 & 85.82 & 86.01 & 86.33 & 85.58 & 84.60 & 83.88 & 85.23 & \textbf{87.98} \\
+Mean \#Feat               & 458.3 & 492.5 & 503.0 & 302.9 & 513.9 & 513.9 & 299.1 & 513.9 & \textbf{200.1} \\
+Friedman Rank             & 6.15 & 4.96 & 4.35 & 4.00 & 5.38 & 5.92 & 4.92 & 5.92 & \textbf{3.38} \\
+$p$-value\tnote{b}        & 0.008 & 0.057 & 0.033 & 0.057 & 0.147 & 0.022 & 0.080 & 0.011 & -- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] Averaged over DLBCL and lymphoma as one independent group.
+\item[b] Two-sided Wilcoxon signed-rank $p$-values comparing SP-PD with each baseline across the 13 groups.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

@@ -1,0 +1,1 @@
+{"kind":"wrong","method":"llm_select_score","model":"gemini-3.8-flash","n_calls":1,"native_per_feature_calls":8,"output_tokens":80,"p":8,"prompt_tokens":266,"schema":"0a4bbd1ff416c250f669d4725eb96924e0b91b2dfdab7629319a7aa779ba4802","scores":[0.4,0.65,0.85,0.15,0.35,0.1,0.95,1.0],"seconds":5.78740975,"task":"gbsg","thoughts_tokens":361,"total_tokens":707}

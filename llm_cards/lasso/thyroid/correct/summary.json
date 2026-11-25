@@ -1,0 +1,1 @@
+{"kind":"correct","method":"llm_lasso","model":"gemini-3.8-flash","n_calls":1,"output_tokens":107,"p":14,"penalties":[3,3,3,3,3,5,4,4,1,2,1,2,1,4],"prompt_tokens":419,"schema":"491f59255737907ce6ddfad3890df7bc8319c4ce9cabdbd196960323c6c9f34e","seconds":5.011627583000006,"task":"thyroid","thoughts_tokens":517,"total_tokens":1043}

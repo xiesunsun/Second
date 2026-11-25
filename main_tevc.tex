@@ -1,0 +1,36 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{stfloats}
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\markboth{IEEE TRANSACTIONS ON EVOLUTIONARY COMPUTATION (WORKING MANUSCRIPT)}%
+{EXPERIMENTAL STUDIES --- SECTION IV}
+
+\begin{document}
+
+\setcounter{section}{3}
+\input{sections/sec4_a_setup}
+\input{sections/sec4_b_highdim}
+\input{sections/sec4_c_clinical}
+\input{sections/sec4_d_ablation}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\input{sections/appendix_setup}
+
+\end{document}

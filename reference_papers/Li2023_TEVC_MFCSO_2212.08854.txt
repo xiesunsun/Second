@@ -1,0 +1,1827 @@
+
+--- PAGE 1 ---
+1
+An Evolutionary Multitasking Algorithm with Multiple
+Filtering for High-Dimensional Feature Selection
+Lingjie Li, Manlin Xuan, Qiuzhen Lin, Member, IEEE, Min Jiang, Senior Member, IEEE, Zhong Ming,
+and Kay Chen Tan, Fellow, IEEE
+Abstract—Recently, evolutionary multitasking (EMT)
+has been successfully used in the field of high-dimensional
+classification. However, the generation of multiple tasks in
+the existing EMT-based feature selection (FS) methods is
+relatively simple, using only the Relief-F method to collect
+related features with similar importance into one task,
+which cannot provide more diversified tasks for knowledge
+transfer. Thus, this paper devises a new EMT algorithm for
+FS in high-dimensional classification, which first adopts
+different filtering methods to produce multiple tasks and
+then modifies a competitive swarm optimizer to efficiently
+solve these related tasks via knowledge transfer. First, a
+diversified multiple task generation method is designed
+based on multiple filtering methods, which generates sev-
+eral relevant low-dimensional FS tasks by eliminating ir-
+relevant features. In this way, useful knowledge for solving
+simple and relevant tasks can be transferred to simplify
+and speed up the solution of the original high-dimensional
+FS task. Then, a competitive swarm optimizer is modified
+to simultaneously solve these relevant FS tasks by trans-
+ferring useful knowledge among them. Numerous empirical
+results demonstrate that the proposed EMT-based FS
+method can obtain a better feature subset than several
+state-of-the-art FS methods on eighteen high-dimensional
+datasets.
+Index Terms— Feature selection, evolutionary multi-
+tasking, competitive swarm optimizer, evolutionary algo-
+rithm, high-dimensional classification
+I. INTRODUCTION
+W
+ITH the development of big data technologies, many
+real-world problems often consist of a large number of
+features, which poses a tremendous challenge for learning
+algorithms [1]. In particular, there are many redundant or ir-
+relevant features in these problems, which may deteriorate the
+performance of the learning algorithms. In this regard, feature
+selection (FS) methods play a crucial role in data preprocessing,
+with the aim of reducing the dimensionality of data by elimi-
+nating redundant and irrelevant features. Thus, FS methods can
+simplify the learning process and achieve good performance by
+selecting a small subset of relevant features for training [2]. In
+general, most existing FS methods can be classified into three
+main categories, i.e., filter-based [3]-[5], wrapper-based [6]-[8],
+and embedded-based [9]-[11]. Specifically, filter-based FS
+methods select features with high relevance based on their
+intrinsic properties measured using univariate statistics [3],
+wrapper-based FS methods measure the “usefulness” of fea-
+tures based on the classifier’s performance [6], and embed-
+ded-based FS methods automatically conduct the FS task dur-
+ing the learning process of the classifier [9]. Generally, dif-
+ferent kinds of FS methods exhibit distinct characteristics and
+advantages, e.g., filter-based FS methods often have a low
+computational cost, while the other two kinds of FS methods
+provide better classification accuracy. The different kinds of FS
+methods mentioned above are combined in [12]-[14], improv-
+ing overall performance.
+However, when running classification in high-dimensional
+datasets (i.e., high-dimensional classification), most of the FS
+methods mentioned above still face two main challenges
+[15]-[16]: high computational cost and stagnation in local op-
+tima. To address these two issues, evolutionary algorithms
+(EAs), such as the genetic algorithm (GA) [17], differential
+evolution (DE) [18], and particle swarm optimizer (PSO) [8],
+have been widely used in FS due to their excellent global search
+ability. In particular, PSO is mostly used in existing FS meth-
+ods due to its high efficiency and simple implementation [19].
+A brief review of EA-based FS methods is given in Section II.
+D. Although empirical results have shown the effectiveness of
+EA-based FS methods, most of them still suffer from slow
+convergence speed or even premature convergence when han-
+dling complex high-dimensional FS problems with a large
+number of features [16].
+To address the above issues, the evolutionary multitasking
+(EMT) method has been proposed as a prominent approach for
+high-dimensional classification due to its efficient search ca-
+pability and fast convergence speed in solving complex prob-
+lems [20]. Generally, EMT-based FS methods construct some
+low-dimensional relevant tasks from the original
+high-dimensional FS task and then use EAs to simultaneously
+solve these tasks through knowledge transfer [13]. In this way,
+useful knowledge for solving simple and relevant tasks can be
+transferred to simplify and speed up the solution of the original
+high-dimensional FS task. Chen et al. demonstrated the first
+attempt to use EMT for high-dimensional classification [13],
+called PSO-EMT, which uses PSO to simultaneously optimize
+Manuscript received xx. xx. 2022; revised xx. xx. 2022; accepted xx. xx.
+2022. This work was supported by the National Natural Science Foundation of
+China (NSFC) under Grant U21A20512, Grant 61876162, and Grant
+61876110; the Research Grants Council of the Hong Kong under Grant Pol-
+yU11209219; the Guangdong “Pearl River Talent Recruitment Program”
+under Grant 2019ZT08X603; and the Shenzhen Science and Technology
+Innovation Commission under Grant R2020A045 and Grant
+JCYJ20190808164211203. (Corresponding author: Qiuzhen Lin)
+L.J. Li, M.L. Xuan, Q.Z. Lin and Z. Ming are affiliated with the College of
+Computer Science and Software Engineering, Shenzhen University, Shenzhen
+518060, China (e-mail of Q.Z. Lin: qiuzhlin@szu.edu.cn).
+M. Jiang is affiliated with the School of Informatics, Xiamen University,
+Xiamen 361005, China (e-mail: minjiang@xmu.edu.cn).
+K.C. Tan is affiliated with the Department of Computing, The Hong Kong
+Polytechnic University, Hong Kong SAR (e-mail: kctan@polyu.edu.hk).
+--- PAGE 2 ---
+2
+the relevant tasks. In this method, one FS task with a small
+subset of relevant features is constructed from the original FS
+experimental results and analysis. Finally, Section V draws
+conclusions and anticipates future work.
+task by using the Relief-F method [3]. Then, these two relevant
+tasks are solved simultaneously by using a PSO variant to
+II. PRELIMINARIES
+perform knowledge transfer among them, thus accelerating the
+convergence speed of the solving process of the original FS
+task. Subsequently, to improve the performance of PSO-EMT,
+Chen et al. devised a new multiple task generation strategy [21],
+This section first introduces some background information
+about FS, EMT and CSO, then reviews the research on
+EA-based FS methods for high-dimensional classification, and
+finally clarifies our motivations.
+called MTPSO, which applies the Relief-F method to generate
+several relevant tasks. Notably, MTPSO considers not only
+relevant features but also partially irrelevant features when
+constructing tasks. In addition, MTPSO employs a PSO variant
+to perform knowledge transfer between tasks.
+Although the empirical results in [13] and [21] validate the
+superior performance of EMT-based FS methods in terms of
+solution quality and convergence speed for high-dimensional
+FS problems, the performance of these methods still depends
+heavily on the adopted multiple task generation and optimiza-
+tion methods. Specifically, multiple task generation in MTPSO
+A. Feature Selection.
+Feature selection is essentially a combinatorial optimization
+problem, as there are 2N different subsets of features to choose
+from a dataset with N features [15]. Assuming that a labeled
+dataset D consists of data with N features and H samples, the
+main purpose of an FS problem is to select n features (n<N)
+from the original feature set D such that the given performance
+metric f (∙) is optimal, where f (∙) denotes the classification error
+rate. Therefore, an FS problem with N features can be formu-
+lated as follows:
+and PSO-EMT uses only a single filtering method to determine
+min ( )
+f X
+the importance and relevance of features, but these methods
+s t X x x x
+
+. . ( , ,..., )
+1 2
+N
+(1)
+cannot construct diversified relevant tasks and may not be
+x i N
+ 
+effective for processing various high-dimensional datasets.
+i
+{0,1}, 1,2,3...,
+Moreover, considering the multiple task optimization method,
+where X indicates a solution with N features, and 1
+i x  means
+PSO variants are employed to perform knowledge transfer and
+that the corresponding i-th feature will be selected; otherwise,
+show limitations in convergence speed and search capability as
+i x  0
+means that it will not be selected.
+the feature dimensionality increases [22]. Therefore, the mul-
+B. Evolutionary Multitasking.
+tiple task generation and optimization methods used in these
+The EMT method aims to promote the transfer of useful
+existing EMT-based FS methods deserve further study.
+knowledge to assist in the efficient solving of multiple tasks
+Based on the above analysis, this paper devises a more ef-
+with different properties [20] since solving one optimization
+fective EMT-based FS method for high-dimensional classifi-
+task can be helpful for solving other relevant optimization tasks
+cation, called MF-CSO, which improves multiple task genera-
+by sharing useful knowledge among them. Mathematically, a
+tion using multiple filtering methods and multiple task opti-
+multiple task optimization framework consisting of K tasks can
+mization using a modified competitive swarm optimizer (CSO).
+be described as follows:
+In summary, the main contributions of this paper are as follows:
+
+min ( ), 1,2,...,
+f X i K
+1) An improved multiple task generation strategy is designed.
+i i
+1 2
+Several filtering methods are used to construct more di-
+s t X x x x
+D
+(2)
+
+. . [ , ,..., ]i
+i i i i
+versified relevant tasks. In this way, the improved diversity
+where ( ) i i f X represents the objective function of task i with its
+of the relevant tasks can help to enhance the knowledge
+solution 1 2 [ , ,..., ]i D
+i i i i X x x x , and i D is the dimensionality of
+transfer performance of EMT when handling various kinds
+X . The main purpose of EMT is to find a set of optimal solu-
+i
+of high-dimensional datasets.
+tions simultaneously in a large search space with certain effi-
+2) An efficient multiple task optimization strategy is pro-
+cient knowledge transfer methods.
+posed by modifying a CSO variant. In this way, solving the
+How to handle the unique search space for each task and how
+original FS task can be highly accelerated by transferring
+to perform knowledge transfer among tasks are two main
+useful knowledge from other relevant FS tasks.
+components of EMT [23]. In particular, effective knowledge
+3) An improved EMT-based FS method is proposed based on
+transfer is crucial for EMT to perform knowledge transfer
+the above two strategies, and its effectiveness is evaluated
+based on a single individual (KTS) or multiple individuals
+on eighteen real-world high-dimensional datasets with the
+(KTM) [24]. In MFEA [20], TWO-MFEA [26], MFEA-DRA
+number of features ranging from 2000 to 12000. Extensive
+[27], and MFEA-II [28], KTS is realized by assortative mating
+experimental results demonstrate that our method can ob-
+and vertical culture propagation [25] to conduct knowledge
+tain a subset of features with higher quality than several
+transfer, while in MFPSO [29], AMFPSO [30], and MTMSO
+state-of-the-art EA-based FS methods and some traditional
+[31], KTM uses PSO to perform knowledge transfer among
+several relevant tasks.
+filtering methods.
+On the other hand, EMT has shown effectiveness in solving
+The remaining parts of this paper are organized as follows.
+certain real-world optimization problems. Due to the interde-
+Section II introduces background information and related
+pendent relationship in most practical problems, the experience
+works on high-dimensional classification. Section III provides
+of solving one problem can be helpful to solving another rele-
+the details of the proposed method, and Section IV provides the
+vant problem. For example, Zhou et al. proposed a permuta-
+--- PAGE 3 ---
+tion-based EMT method for solving the vehicle route-planning
+(VRP) problem [32], where the optimal solutions of one VRP
+problem can be transferred to guide the search of another VRP
+problem in the routing space. Zhang et al. presented an effec-
+tive surrogate-assisted EMT algorithm using genetic pro-
+gramming to solve the dynamic flexible job shop scheduling
+(DFJSS) problem [33], in which newly generated individuals
+are evaluated by the built surrogates and then transferred to
+suitable JSS tasks. Shen et al. extended the EMT framework to
+solve real-world network reconstruction problems [34], in
+which similar network structure patterns between different
+networks can be fully exploited by transferring useful
+knowledge among these relevant networks.
+C. Competitive Swarm Optimizer.
+Cheng and Jin [35] first proposed the competitive swarm
+optimizer (CSO) and introduced the concept of a competition
+mechanism between particles within a single swarm. Unlike
+traditional PSOs, which use the global best and personal best
+particles to guide the swarm search, CSO applies a pairwise
+competition to evolve the swarm, showing stronger exploration
+ability and faster convergence speed than PSO [36]. In CSO,
+the swarm is first divided into two groups via random pairwise
+competition, resulting in winner particles with better perfor-
+mance and loser particles with worse performance. Then, the
+velocity and position of loser particles are updated by learning
+from their corresponding winner particles. This process can be
+formulated as follows:
+V t r V t r X t X t
+     
+L L W L
+( 1) ( ) ( ( ) ( ))
+1 2
+_
+    (3)
+
+r X t X t
+3
+( ( ) ( ))
+L
+( 1) ( ) ( 1) L L L X t X t V t     (4)
+where r1, r2, and r3 represent three random numbers ranging
+from 0 to 1. L V t and ( )
+( )
+L X t indicate the velocity and position
+of the loser particle in the current t-th generation, respectively.
+W X t ( )
+is the position of the corresponding winner particle in
+the current generation. ( 1)
+L V t  and ( 1)
+L X t  denote the ve-
+locity and position of the loser particle in the next generation,
+respectively. _
+( ) X t represents the mean position value of par-
+ticles in the current swarm [35], and is set to control the
+influence of _
+( ) X t . Empirical results have verified the effec-
+tiveness of CSO in solving problems with large-scale variables
+[36]-[37]. This paper can be considered the first extension of
+CSO to transfer knowledge between related tasks.
+D. Related Works and Motivations.
+To date, many EAs have been successfully applied in the
+field of high-dimensional classification due to their efficient
+global search ability. For example, four effective search oper-
+ators (i.e., accuracy-preferred domination, quick bit mutation
+operator, mutation-retry, and combination operators) designed
+by Zhou et al. [6] under the Pareto-based domination frame-
+work [38] can accelerate the convergence speed and strengthen
+the search capacity of FS. A steering matrix based on symmet-
+ric uncertainty and the domination relationship metric proposed
+by Cheng et al. [7] helps to select relevant features according to
+the importance of each feature. A duplication analysis-based
+EA reported by Xu et al. [39] applies a duplication method to
+3
+filter out redundant features and a diversity-based selection
+method to guide the selection of promising features.
+In particular, PSO has become a very popular solver for
+handling high-dimensional FS problems due to its efficient
+search capability and easy implementation. For example, a new
+potential PSO algorithm (PPSO) proposed by Tran et al. [15]
+uses a new discretized representation strategy to narrow the
+search space for high-dimensional FS problems. To further
+enhance the performance of PPSO, an effective variable-length
+representation strategy designed by Tran et al. [16] enables
+different particles in a swarm to have different variable lengths
+(i.e., the variable length of a particle equals the number of
+features it contains). Thus, the strategy can reduce the search
+space and help to explore different potential regions. In addi-
+tion, to combine the distinct advantages of different FS meth-
+ods, some PSO-based hybrid strategies were designed. For
+instance, an efficient hybrid PSO with a wrapped approach
+proposed by Chen et al. [40] applies an adaptive PSO variant to
+accelerate the convergence speed and a spiral-shaped mecha-
+nism to explore the search space and find promising regions.
+An effective filter-clustering-evolutionary wrapper algorithm
+(HFS-C-P) proposed by Song et al. [12] employs a clustering
+method to significantly reduce the search space and an evolu-
+tionary wrapper method with strong global search capability to
+find more representative features. However, for solving certain
+complex high-dimensional FS problems, the above PSO-based
+FS methods have some limitations, such as slow convergence
+speed and insufficient search capability in large-scale search
+spaces [13], [21].
+To address the above issues, the idea of extending EMT for
+solving high-dimensional FS problems has been proposed,
+given by the superiority of EMT in solving certain complex
+optimization problems [41]-[43]. Two representative works
+were proposed by Chen et al. in [13], [21]. Specifically, Chen et
+al. first implemented the PSO-EMT, an EMT technique, to
+handle high-dimensional FS problems in [13]. In this approach,
+all features are classified into important and unimportant fea-
+tures by using a single filtering method (i.e., the Relief-F
+method [3]). In this way, one FS task with the relevant features
+and one FS task with all features are constructed. Then, these
+two relevant FS tasks are solved simultaneously by using a
+modified PSO variant that relies on knowledge transfer. Fur-
+thermore, Chen et al. designed an effective multiple task gen-
+eration strategy in MTPSO [21], which not only considers the
+relevant features but also gives a selection probability for par-
+tially irrelevant features to form relevant FS tasks, considering
+the interactions between features.
+Although the empirical results in [13], [21] have validated
+the effectiveness of employing EMT to solve high-dimensional
+FS problems, as introduced in Section I, the multiple task
+generation methods in PSO-EMT and MTPSO are rather sim-
+ple, as they only use the Relief-F method to collect the relevant
+features, which cannot provide more diversified tasks for
+knowledge transfer and may be not applicable to different
+datasets with different preferences. In addition, the multiple
+task optimization strategies used in PSO-EMT and MTPSO are
+both based on PSO, which has limitations in terms of con-
+--- PAGE 4 ---
+4
+Raw features
+Input
+Step 1: Multiple Task Generation
+Multiple filtering methods
+(Relief-F, TV, PCC,...)
+...
+D2 DK+1
+D1
+Task 1
+with all features
+Task 2
+with important features
+selected by one filtering method
+Task K+1
+with important features
+selected by one filtering method
+Initialization Initialization Initialization
+Step 2: Multiple Task Optimization
+P1 P2 PK+1
+...
+CSO-based knowledge transfer strategy
+Termination? NO
+YES
+Step 3: Result Output
+...
+Algorithm 1 Framework of MF-CSO
+vergence speed and search ability when solving certain com-
+plex high-dimensional FS problems. Based on the above dis-
+cussions, this paper proposes a more effective EMT-based FS
+method (MF-CSO) that improves the performance of both
+multiple task generation and optimization. Thus, this paper
+designs a diversified multiple task generation strategy with
+multiple filtering methods to construct several diversified rel-
+evant tasks, which is different from the existing EMT-based FS
+methods (i.e., PSO-EMT and MTPSO) using only a single
+filtering method. In this way, our method can transfer useful
+search knowledge among different relevant tasks, which en-
+hances the ability to handle high-dimensional FS problems.
+Moreover, this paper modifies a CSO variant to run knowledge
+transfer among relevant tasks, aiming to overcome the short-
+comings of PSO mentioned above. The details of the proposed
+EMT-based FS method are introduced in the next section.
+III. PROPOSED METHOD
+This section introduces the details of our EMT-based FS
+method (MF-CSO). Specifically, Section III. A describes the
+general framework of MF-CSO, Section III. B introduces the
+process of multiple task generation in MF-CSO, Section III. C
+presents the principle of the multiple task optimization strategy
+that uses the proposed CSO-based knowledge transfer to evolve
+several relevant tasks, Section III. D describes the adopted
+fitness function in MF-CSO, and Section III. E analyzes the
+computational complexity of MF-CSO.
+Best particle in Task 1 Best particle in Task 2 Best particle in Task K+1
+Output
+Final selected features
+Fig. 1. Schematic of MF-CSO.
+A. General Framework of MF-CSO
+As in most existing FS algorithms [6]-[7], the given dataset is
+Input: Data: training set.
+first divided into a training set and a testing set. Then, a set of
+Output: B: the best particles of all tasks.
+optimal solutions is obtained based on the training set using our
+1.  1 2 1 , ,..., K D D D   Multiple Task Generation (Data);
+proposed MF-CSO. Finally, the optimal solution is loaded into
+2. Initialize K+1 populations  1 2 1 , ,..., K P P P  for all tasks;
+3. while the termination condition is not met do
+the testing set to evaluate the performance of the algorithm. The
+4. Multiple Task Optimization ( i P ); \\ =1, 2,..., 1 i K 
+schematic of the proposed MF-CSO is plotted in Fig. 1, which
+5. end while
+includes three main steps (multiple task generation, multiple
+6. B  Select the best particle from all tasks;
+task optimization and result output). Specifically, the process of
+multiple task generation is first implemented by using K fil-
+tering methods. Thus, K+1 highly relevant FS tasks are con-
+structed, consisting of one FS task with all features and K FS
+tasks with some important features selected by using K filtering
+methods. The details of the proposed multiple task generation
+strategy are introduced in Section III. B. Then, the multiple
+task optimization process is conducted to solve these relevant
+tasks simultaneously, in which a modified CSO variant is used
+to perform knowledge transfer among the relevant tasks. The
+details of our proposed CSO-based knowledge transfer strategy
+for multiple task optimization are provided in Section III. C. In
+the last step, the particle with the best fitness function value for
+each task is output when the termination condition is met. The
+adopted fitness function is introduced in Section III. D. The
+pseudocode of the general framework of MF-CSO is provided
+in Algorithm 1. After the above training process, the final
+features selected in the best performing particle among K+1
+tasks are used to assess the classification accuracy of the pro-
+posed MF-CSO method on the testing dataset.
+B. Multiple Task Generation Strategy with Multiple Filtering
+Methods
+As mentioned in many existing FS studies [12]-[13], the
+filtering method is an effective technique to measure the im-
+portance of features, which helps to achieve good classification
+performance by eliminating redundant/irrelevant features. In
+general, different filtering methods show distinct advantages on
+different datasets due to their different metrics for calculating
+the correlation between features and labels. Thus, this paper
+uses multiple filtering methods to design a diversified multiple
+task generation strategy, aiming to enhance the robustness of
+our approach in handling various high-dimensional datasets.
+First, the importance of features is ranked by using multiple
+filtering methods. Notably, our designed framework is scalable
+for most existing filtering methods. In particular, three common
+filtering methods are adopted in this paper to determine the
+importance of features, namely, the Relief-F [3], term variance
+(TV) [5], and Pearson correlation coefficient (PCC) methods
+[4]. The details of each filtering method are introduced as fol-
+lows:
+In the Relief-F method, the feature weight values are calcu-
+lated based on the ability of the features to identify nearby
+R
+samples. Specifically, Relief-F randomly selects a sample i
+--- PAGE 5 ---
+5
+Relief-F
+: Knee Point
+: Relevant Features
+: Irrelevant Features
+from the training set and then searches for h nearest neighbors
+of i
+H
+R from the same class, called the nearest hits j
+( 1,2,...
+j
+,h ). All the h nearest neighbors from each of the
+different classes are called the nearest misses j M c , where c is
+( )
+a class. Then, the weight values of features based on the Re-
+lief-F method are calculated by:
+Original feature set: D1
+N dimensions
+1 2 3 4 5 6 7 8 . . . . . . . N
+Task 1
+Multiple Filtering Methods
+Knee Point Selection Method:
+TV PCC
+h
+Weight Values
+Weight Values
+Weight Values
+
+diff a R H
+( , , )
+i j
+Feature Ranking Feature Ranking Feature Ranking
+t t
+
+1
+W a W a
+ 
+Relief F Relief F
+( ) ( )
+j
+
+1
+  
+Selection Selection Selection
+t h
+
+h
+(5)
+1 8 14 25 . . . n1 5 8 17 35 . . . n2 1 15 33 40 . . . n3
+ 
+p c diff a R M c
+
+( ) [ ( , , ( ))] 1 ( ( ))
+Subset of relevant features:
+Subset of relevant features:
+Subset of relevant features:
+D2
+D3
+D4
+i j
+
+c class R
+
+( )
+p class R
+i
+i j
+
+1
+t h
+
+where ( )t
+Relief F W a is the weight value of feature a using the
+Task 2 Task 3 Task 4
+Fig. 2. An example of the proposed multiple task generation
+using multiple filtering methods.
+Relief-F method, t is the current iteration, h represents the size
+of the nearest neighbor samples, ( ) i class R indicates the class
+Therefore, a larger value of PCC W a implies that feature a is
+( )
+label for sample i
+R , and  
+p c and  
+ i p class R are the
+more correlated with the label.
+proportions of class c and sample i
+R , respectively. 1 ( , , diff a S
+After determining the importance of each feature based on
+2 )
+S represents the difference between the values of feature a in
+the aforementioned multiple filtering methods, this paper em-
+sample 1 S (i.e., 1 ( ) S a ) and sample 2
+S (i.e., 2 ( ) S a ), calculated
+ploys the knee point selection method [44] based on the weight
+by：
+values of features to distinguish relevant and irrelevant features.
+1 2 1 2 ( , , ) | ( ) ( ) | /(max( ) min( )) diff a S S S a S a a a   (6)
+That is, if and only if the weight values of features are larger
+where max( ) a and min( ) a indicate the maximum and mini-
+than that of the knee point are these features considered rele-
+mum values of feature a in the h nearest samples of j
+H or
+vant features, and vice versa. Due to page limitations, addi-
+( )
+j M c , respectively. Note that higher weight values corre-
+tional details of the adopted knee-point selection method are
+spond to a higher relevance of these features.
+presented in the supplementary file.
+The TV method is considered one of the simplest ways to
+For a more intuitive view of the entire multiple task genera-
+assess the importance of features on a univariate basis as fol-
+tion process, a simple example is plotted in Fig. 2, where three
+lows:
+different subsets of relevant features determined by three fil-
+S
+| |
+2
+1 ( ) ( ( ) ) | |
+TV
+W a A j A S 
+   (7)
+j
+1
+where ( )
+TV W a is the weight value of feature a based on the TV
+A j method,  
+represents the value of feature a in sample j, and
+A represents the average value of all  
+A j (j = 1, 2,…, S ,
+and S indicates the total number of samples). Thus, a larger
+value of ( )
+TV W a indicates that feature a contains valuable
+information, which is more important for classification prob-
+lems.
+The PCC method ranks the importance of features by cal-
+culating the linear correlations between individual features and
+class labels in classification or continuous targets in regression,
+defined by
+tering methods (the Relief-F, TV, and PCC methods) are ob-
+tained, namely, 2
+D , 3
+D and 4
+D , respectively. Finally, these
+feature subsets are used to construct three low-dimensional FS
+tasks, namely, Task 2, Task 3 and Task 4. In addition, a full set
+of features is used to construct an FS task, denoted as Task 1. In
+this way, we can obtain several different FS tasks through our
+proposed multiple task generation strategy using multiple fil-
+tering methods, helping to enhance the performance of
+knowledge transfer in EMT when handling various kinds of
+high-dimensional datasets.
+C. Multiple Task Optimization using a Competitive Swarm
+S
+| |
+
+ 
+( )( )
+x x y y
+i i
+W a
+( )
+i
+
+1
+
+PCC S S
+(8)
+| | | |
+ 
+2 2
+ 
+( ) ( )
+x x y y
+i i
+i i
+ 
+1 1
+where ( )
+PCC W a is the weight value of feature a calculated by
+the PCC method. xi and yi represent the value of feature a and its
+corresponding label in sample i, respectively. x and y rep-
+resent the average values of xi and yi, respectively. S is the
+size of the samples. Note that PCC W a =0 means that the two
+( )
+variables (i.e., xi and yi) are uncorrelated, PCC W a <0 means
+( )
+that the two variables are negatively correlated, and PCC W a >0
+( )
+indicates that the two variables are positively correlated.
+Optimizer
+After the multiple task generation process is completed, the
+multiple task optimization process is performed on these four
+relevant FS tasks, including Task 1 with all features and Tasks
+2-4 with the important features determined by the Relief-F, TV
+and PCC methods, respectively. At the beginning of multiple
+task optimization, four subpopulations, i.e., 1 2 3 , , P P P and 4
+P ,
+are initialized to solve their corresponding tasks simultane-
+ously.
+In terms of the solver in EMT for solving FS problems in
+high-dimensional classification, Chen et al. [13], [21] extended
+PSO to perform knowledge transfer between different tasks.
+However, as analyzed in Section I, PSO-based solvers still
+suffer from slow convergence speeds or even premature con-
+vergence when handling complex FS problems in large-scale
+search spaces. In general, there are two main approaches to
+--- PAGE 6 ---
+Current particles for task i: Pi
+Loser particle set for task i: Li
+Randomly select one particle
+Loser
+Pairwise Competition
+based on the fitness values
+Winner
+Randomly select one particle
+l1
+l3
+l5
+l2
+l4
+Learning process
+w1
+w5
+w3
+w2
+w4
+Winner particle set for task i: Wi
+Fig. 3. Schematic of pairwise competition and learning process
+for competitive swarm optimizer. efficiently solve high-dimensional problems in the EC domain.
+Specifically, the first approach simplifies the problems to be
+solved by using divide-and-conquer approaches [45]-[48].
+Nevertheless, as described in [49], such approaches are com-
+putationally expensive because they consume a large amount of
+additional computational resources for variable analysis or
+dimensionality reduction. In addition, as pointed out in [50],
+such approaches are more likely to become trapped in local
+optima since they fail to fully explore the original large-scale
+space. The second approach designs more powerful search
+operators to effectively explore large-scale search spaces.
+CSOs are a representative of this approach and show strong
+exploration ability, and the empirical results in [36]-[37]
+demonstrate their superior advantages. Thus, a natural idea is
+using CSO within EMT to improve the exploration ability for
+solving high-dimensional FS problems. This paper introduces a
+new CSO variant as the solver for EMT.
+Algorithm 2 presents the pseudocode for our designed mul-
+tiple task optimization method using CSO. First, as shown in
+Line 2, the particles in each task are divided into winner parti-
+cles and loser particles by using the random pairwise competi-
+tion of CSO. Based on the principle of pairwise competition,
+two particles are randomly selected from the swarm and then
+compared based on the fitness values. Then, the particle with
+the better fitness value is inserted into the winner particle set Wi,
+while the other particle is inserted into the loser particle set Li.
+the calculation of the fitness value is introduced in Section III.
+D. To better understand the pairwise competition in CSO, a
+schematic diagram is provided in Fig. 3. Then, the CSO-based
+knowledge transfer strategy is performed to evolve each task in
+Lines 3-10, consisting of two cases (i.e., knowledge transfer or
+not). Specifically, a real-valued number randomly generated in
+(0, 1) is compared to the predefined knowledge transfer prob-
+ability trans p . If this random number is less than trans p ,
+knowledge transfer will not occur, and the traditional CSO
+search will be performed to evolve the loser particles, where the
+velocity and position of loser particles are updated by learning
+from their corresponding winner particles using (4)-(5). Oth-
+erwise, knowledge transfer will be realized by using the modi-
+fied CSO, where the loser particle learns from not only its
+winner particle but also another winner particle obtained in
+other relevant tasks. The formulation is defined as follows:
+i i i
+V t r V t r X t X t
+     
+( 1) ( ) ( ( ) ( ))
+1 2
+L
+L W L
+(9)
+  
+r X t X t
+3
+( ( ) ( ))
+W L
+A
+where t and t+1 are the current t-th generation and the next
+generation, respectively, and 1 r , 2
+r and 3
+r are three random
+6
+g1
+Task 1
+Task 2
+W1
+W2
+Task 3 g3
+W3
+WA
+CSO-based
+knowledge transfer
+g4
+Task 4
+W4
+Fig. 4. A simple example of the CSO-based knowledge transfer
+method for optimizing Task 2, where 1 3 4 + 1 g g g   .
+numbers ranging from 0 to 1. i X t and ( )
+W
+( )
+i X t represent the
+L
+current positions of winner and loser particles for task i, re-
+spectively, and ( )A
+W X t represents the position of one promis-
+ing winner particle that is aggregated by three winner particles
+from the other three relevant tasks. The formulation is defined
+as follows:
+X t X t g
+( ) ( ) A k W W k
+   (10)
+k i
+ 
+[1,4]
+where ( )k W X t indicates the position of the winner particle that
+is randomly selected from task k excluding the target task i. Fig.
+4 gives a simple example of using CSO-based knowledge
+transfer for optimizing Task 2, where k
+g is the corresponding
+weight value of task k. In this paper, we set the weight value of
+Task 1, which contains the full set of features, to 0.1, and the
+weight value of other tasks containing different feature subsets
+to 0.45. The reasons for these parameter settings are discussed
+in Section IV. D.
+After all the loser particles in each task have evolved as de-
+scribed, polynomial mutation (PM) [38] is used to evolve the
+winner particles in Line 11, aiming to further improve their
+quality. Then, all the updated winner and loser particles are
+combined to form the next subpopulation for each task in Line
+12. Note that the multitasking optimization process will be
+terminated when the stopping condition is met.
+D. Fitness Function
+The design of fitness function values for evaluating the
+performance of each individual plays a crucial role in the field
+of FS, as a reasonable fitness function definition can effectively
+guide the FS process and select high-quality features. Essen-
+tially, the main objectives of FS are to maximize the classifi-
+cation accuracy and minimize the size of the feature subset.
+Therefore, in this paper, a fitness function consisting of these
+two objectives is designed as follows:
+(1 ) S
+       (11)
+fitness E D
+where E is the classification error rate of the algorithm and S
+and D indicate the number of selected features and the total
+number of features, respectively. As suggested in [51],  ,
+ranging from 0 to 1, is used to dynamically adjust the weight
+value between the classification accuracy and the size of se-
+lected features, and we set =0.999999 as advised in a pre-
+vious study [11].
+--- PAGE 7 ---
+7
+As the dimensionality of the dataset increases, the impact of
+the data imbalance problem becomes increasingly significant.
+Therefore, to better tackle the data imbalance problem, we use a
+balanced classification error rate instead of the general error
+rate, as recommended in [52]. The balanced classification error
+rate is calculated as follows:
+1
+c
+Balanced E TPR
+_ 1
+   (12)
+i
+c 
+i
+1
+where
+Balanced E is the balanced error rate, c denotes the
+_
+number of classes in the dataset and i TPR is the proportion of
+correctly identified instances in class i. Since the balanced
+accuracy has no bias for each class in FS problems, the weight
+for all classes is set to 1/c.
+E. Computational Complexity Analysis
+As presented in Algorithm 1, MF-CSO consists of four main
+components: the process of multiple task generation, the pro-
+cess of multiple task optimization and the result output. Spe-
+cifically, the process of multiple task generation is run only at
+the beginning of the algorithm with the input of the training set
+with D features, which requires a time complexity of ( ) O K D  ,
+where K is the number of adopted filtering methods in MF-CSO.
+Then, the process of population initialization is performed in
+Line 2, which requires a total time complexity of ( ) O K N  ,
+where N is the total population size. The process of multiple
+task generation with the input of K+1 different tasks has a time
+complexity of ( 1) ( ) i
+K O D N    , where i
+N is the subpopu-
+lation size for task i. The process of result output has a time
+complexity of ( 1) ( ) i
+K O D N    . Therefore, the worst time
+complexity of our proposed MF-CSO is { ( ), ( Max O D K O K  
+N O D N  .
+), ( )} i
+IV. SIMULATION RESULTS AND DISCUSSION
+This section presents a large number of experiments to em-
+pirically validate the performance of our proposed MF-CSO in
+processing eighteen real-world high-dimensional datasets with
+the number of features ranging from 2000 to 12000. In addition,
+ablation experiments further demonstrate the effectiveness of
+our designed strategies in MF-CSO. All the simulations are
+performed by using MATLAB R2020a on a 64-bit Windows 10
+personal computer with 24 GB RAM and an Intel Core-i7 3.6
+GHz processor.
+A. Comparison Algorithms
+To verify the effectiveness of the proposed MF-CSO, four
+competitive EA-based FS methods, including PS-NSGA [6],
+SM-MOEA [7], PSO-EMT [13], and MTPSO [21], are adopted
+for performance comparison. Specifically, SM-MOEA and
+PS-NSGA are wrapper-based FS methods, while PSO-EMT
+and MTPSO use the idea of EMT for solving high-dimensional
+FS problems, which have shown promising performance in
+high-dimensional classification. In addition, two traditional
+EA-based FS methods, MOEA/D-FS [53] and CSO-FS [22],
+are used for performance comparison. Particularly,
+MOEA/D-FS uses a binary crossover variation in the frame-
+work of MOEA/D [53], and CSO-FS employs a traditional
+CSO search strategy [22] for handling FS problems. Moreover,
+to verify the effectiveness of these FS methods, the classifica-
+TABLE I: PROPERTIES OF THE ADOPTED DATASETS.
+No. Dataset Features Instances Classes
+1 warpPIE10P 2,420 210 10
+2 Lymphoma 5,026 62 3
+3 Nci 5,244 61 8
+4 Leukemia 1 5,327 72 3
+5 DLBCL 5,469 77 2
+6 9Tumor 5,726 60 9
+7 TOX_171 5,748 171 4
+8 Brain Tumor 1 5,920 90 5
+9 Prostate6033 6,033 102 2
+10 ALLAML 7,129 72 2
+11 Nci9 9,712 60 9
+12 Adenocarcinoma 9,868 76 2
+13 orlraws10P 10,304 100 10
+14 Brain Tumor 2 10,367 50 4
+15 Prostate 10,509 102 2
+16 Leukemia 2 11,225 72 3
+17 11 Tumor 12,533 174 11
+18 Lung Cancer 12,600 203 5
+TABLE II: PARAMETER SETTINGS
+Algorithms Parameters
+SM-MOEA Attenuation factor γ=0.1
+PS-NSGA Mutation probability=0.1,
+Mutation retry number=1
+PSO-EMT c1=c2=c3=1.49445, ρ=0.05, rmp=0.6, m=10,
+0.9 0.5 ( / _ ) w iter ma x iter   
+MTPSO c1=c2=c3=1.49445, ρ=0.05, rmp=0.6, G=6,
+0.9 0.5 ( / _ ) w iter ma x iter   
+CSO-FS r1, r2, r3∈[0,1]
+MOEA/D-FS T=0.8, ρ=0.5
+MF-CSO r1, r2, r3∈[0,1], g1=0.1, g2=g3=g4=0.45,
+ptrans=0.5
+tion effect without the FS method is adopted for performance
+comparison, termed FULL. Furthermore, three traditional fil-
+tering methods (e.g., the Relief-F [3], PCC [4] and TV [5]
+methods) are also used for performance comparison. Note that
+for a fair comparison, the knee point selection strategy [44] is
+also used for these three filtering methods.
+All the source codes of the compared algorithms, except
+PSO-EMT and MTPSO, are provided by the original references.
+To verify the experimental results and to facilitate further study
+by other researchers, we publish the source codes of our method
+and two reproduction methods (i.e., PSO-EMT and MTPSO)
+on GitHub1
+.
+B. Datasets
+In our experiments, eighteen unbalanced high-dimensional
+genetic datasets with more than 2000 features are adopted to
+validate the effectiveness of the proposed MF-CSO, which are
+1 https://github.com/gelin123/MF_CSO_Materials
+--- PAGE 8 ---
+8
+Fig. 5：The average error rates of MF-CSO with different
+transfer probabilities on the ‘warpPIE10P’, ‘Leukemia 1’,
+and ‘Leukemia 2’ datasets.
+(a) (b)
+also available in1. Table I summarizes the properties of these
+adopted datasets.
+C. Parameter Settings
+To ensure fairness, a KNN classifier with k=1 is chosen for
+all the compared FS methods. As suggested in [6], the maxi-
+mum number of iterations and the population size are set to 70
+and 300, respectively, for all the compared methods. Notably,
+the three hybrid methods, i.e., PSO-EMT, MTPSO and
+MF-CSO, use a discrete coding approach. Therefore, during the
+evolutionary search process, a classification rule based on a
+threshold δ determines the selected features. Specifically, if the
+particle representation corresponding to a feature is greater than
+δ , the feature is marked as ‘1’ (i.e., the feature is selected);
+otherwise, it is marked as ‘0’ (i.e., the feature is not selected). In
+this paper, δ is set to 0.5 for these three discrete coding-based
+algorithms. In addition, Table II summarizes some unique
+parameters of each compared algorithm.
+To ensure the fairness and validity of the comparison results,
+the tenfold cross-validation (CV) method is used to estimate the
+results of most existing FS algorithms [6]-[7]. In addition, to
+avoid feature selection bias, a tenfold CV method is performed
+on the training sets during the evolutionary process, which aims
+to group the training sets to evaluate the objective value of the
+current solution.
+D. Parameter Sensitivity Analysis of MF-CSO
+As introduced in Algorithm 2, our designed MF-CSO con-
+sists of two important parameters, including the transfer prob-
+ability trans p that determines the evolutionary method (i.e.,
+traditional CSO or knowledge transfer-based CSO) and the
+weight value k
+g that controls the impact of each task when
+conducting knowledge transfer among tasks. To clarify the
+reasons for the chosen parameter settings, we conduct a pa-
+rameter sensitivity analysis of these two parameters.
+1). Sensitivity Analysis of trans p : The transfer probability trans p
+of Tasks 2-4 (i.e., 1 2,3,4 g g  ). The reason behind this rule is
+plays a critical role in evolutionary multitasking optimization.
+that it is easier to find high-quality solutions in a small-scale
+Here, we perform a parameter sensitivity analysis to determine
+search space than in the original large-scale search space.
+the appropriate parameter setting for trans p . Fig. 5 provides the
+Therefore, the particles of Tasks 2-4 should be more influential
+error rates of MF-CSO with different values of trans p on the
+than those of Task 1 when performing knowledge transfer.
+‘warpPIE10P’ (with a small number of features), ‘Leukemia 1’
+Third, based on the aggregation mechanism designed in (10),
+(with a medium number of features) and ‘Leukemia 2’ (with a
+g , 3
+2
+g , and 4
+g work when optimizing Task 1, 1 g , 3
+g , and
+large number of features) datasets, where the best result on each
+g work when optimizing Task 2, and so on. Therefore, the
+4
+dataset is marked by a red pentagram (). As observed from
+sum of the weight values between Task 1 and any other two
+Fig. 5, MF-CSO with various values of trans p indeed shows
+tasks are equal to 1 (i.e., 1 1
+i j g g g    , , {2,3,4} i j i j    ).
+different performance when processing different datasets. In
+Based on the above principles, four different sets for setting
+summary, MF-CSO with =(0.4,0.5,0.6)
+trans p shows a better
+1 g and 2,3,4
+g are considered here for performing parameter
+overall performance compared to the others. Therefore, the
+sensitivity analysis, namely, case A ( 1 0.1
+g
+, 2 3 4 g g g  
+transfer probability trans p is suggested to be set between 0.4
+0.45), case B ( 1 0.2
+g
+, 2 3 4 0.4
+g g g   ), case C
+and 0.6, and trans p =0.5 is adopted in this study.
+( 1 0.33
+g
+, 2 3 4 g g g   0.33), and case D ( 1 0.6
+g
+,
+2). Sensitivity Analysis of k
+g : When setting the weight values
+2 3 4 g g g   0.2). Fig. 6 provides the average error rates of
+for the four different tasks in MF-CSO (i.e., 1 g for Task 1 with
+these four cases in solving the ‘warpPIE10P’, ‘Leukemia 1’ and
+a full set of features and 2
+g , 3
+g , and 4
+g for Tasks 2-4 with
+‘Leukemia 2’ datasets. As observed from Fig. 6, compared to
+different subsets of features), some principles are considered.
+other cases, case A achieves the lowest error rate on all three
+First, the weight values of Tasks 2-4 should be equal (i.e.,
+datasets. Therefore, we adopt 1 0.1
+g and 2 3 4 g g g   0.45
+2 3 4 g g g  ) to ensure that Tasks 2-4 have the same influence
+in this study.
+on the knowledge transfer process when optimizing Task 1.
+E. Performance Comparison and Discussion
+Second, the weight value of Task 1 should be smaller than that
+(c)
+Fig. 6：The average error rates of MF-CSO with different
+weight value settings for the (a) ‘warpPIE10P’, (b) ‘Leu-
+kemia 1’, and (c) ‘Leukemia 2’ datasets.
+--- PAGE 9 ---
+9
+TABLE III: THE AVERAGE CLASSIFICATION RESULTS OF MF-CSO VERSUS SEVEN COMPARED ALGORITHMS.
+Datasets FULL SM-MOEA PS-NSGA PSO-EMT MTPSO CSO-FS MOEA/D-FS MFCSO
+warpPIE10P 15.49(-) 1.48(≈) 1.43(≈) 0.83(≈) 0.84(≈) 51.33(-) 1.00(≈) 0.82
+Lymphoma 0.92(+) 23.59(-) 7.99(-) 6.67(-) 3.33(-) 43.62(-) 2.20(≈) 1.87
+Nci 31.74(-) 34.51(-) 32.83(-) 40.32(-) 36.01(-) 35.71(-) 30.42(≈) 28.77
+Leukemia 1 20.28(-) 22.12(-) 12.89(-) 13.89(-) 13.06(-) 17.50(-) 17.31(-) 7.50
+DLBCL 17.00(-) 19.63(-) 15.95(-) 15.83(-) 11.67(-) 15.50(-) 15.83(-) 7.50
+9Tumor 63.33(-) 52.64(+) 45.85(+) 44.41(+) 47.43(+) 56.06(≈) 56.17(≈) 55.23
+Tox_171 22.11(-) 16.11(-) 8.33(≈) 8.00(≈) 8.50(≈) 14.21(-) 10.63(-) 7.62
+Brain Tumor 1 27.92(-) 25.65(≈) 28.76(-) 22.33(≈) 21.97(+) 26.70(-) 24.84(≈) 24.33
+Prostate6033 18.69(-) 18.28(-) 16.03(-) 19.50(-) 16.00(-) 15.58(-) 19.67(-) 12.82
+ALLAML 22.54(-) 18.83(-) 13.11(-) 9.10(-) 8.92(-) 17.22(-) 17.00(-) 3.76
+Nci9 58.67(-) 38.42(+) 43.90(-) 46.95(≈) 48.18(-) 56.81(-) 54.58(-) 46.00
+Adenocarcinoma 37.26(-) 30.40(≈) 36.06(≈) 34.67(≈) 33.98(≈) 35.99(≈) 40.48(-) 34.44
+orlraws10P 22.18(-) 6.28(-) 6.70(-) 3.40(≈) 3.00(≈) 7.67(-) 5.00(≈) 3.70
+Brain Tumor 2 37.50(-) 42.79(-) 33.67(-) 33.33(-) 26.67(≈) 27.60(≈) 36.00(-) 25.42
+Prostate 14.67(≈) 17.19(-) 12.15(≈) 18.24(-) 14.83(≈) 11.03(≈) 16.72(-) 12.67
+Leukemia2 10.56(-) 16.86(-) 10.94(-) 9.44(-) 10.00(-) 14.15(-) 12.40(-) 1.67
+11 Tumors 28.58(-) 29.71(-) 22.19(≈) 21.46(≈) 20.00(≈) 27.61(-) 25.62(-) 20.31
+Lung Cancer 21.95(-) 12.94(≈) 13.50(≈) 15.40(-) 15.72(-) 21.55(-) 21.17(-) 12.44
+TABLE IV: THE NUMBERS OF FEATURES SELECTED BY MF-CSO AND SEVEN COMPARED ALGORITHMS.
+Datasets FULL SM-MOEA PS-NSGA PSO-EMT MTPSO CSO-FS MOEA/D-FS MFCSO
+warpPIE10P 2420 18 162.5 115.47 227.76 4.6 1070.2 103.93
+Lymphoma 4026 71 2.1 12 11.99 2.61 1896.7 53.48
+Nci 5244 15.06 125.23 264.74 1467.47 403.17 2495.8 273.46
+Leukemia 1 5327 9.16 16.8 242.5 910.54 415.93 2535.4 229.6
+DLBCL 5469 12.8 11.2 154.4 1235.27 343.77 2629.6 96.5
+9Tumor 5726 14.53 192.2 309.3 574.293 339.15 2753.9 199.2
+Tox_171 5748 18.21 94.4 2867.8 879.863 585.43 2744.5 1170.7
+Brain Tumor 1 5920 6.4 61.11 211.5 984.59 139.28 2823 194.5
+Prostate6033 6033 9.89 46.52 342.336 1625.71 710.92 2857.3 212.13
+ALLAML 7129 5.33 17.9 182.8 1955.12 401.87 3414.5 297.6
+Nci9 9712 26.3 167.7 1333.7 689.98 560.133 4669.1 2354.4
+Adenocarcinoma 9868 11.49 55.95 2084.56 297.77 533.773 4660.5 523.31
+orlraws10P 10304 28.9 27.93 807.88 1399.04 57.7 4899.4 322.51
+Brain Tumor 2 10367 9.27 74.66 211.5 1909.09 139.28 4987.8 194.5
+Prostate 10509 13.5 63.2 132.1 2880.71 1203.74 5065.88 63.2
+Leukemia2 11225 8.56 28.06 244.3 1605.6 1109.66 5420.7 373.4
+11 Tumors 12533 46.44 334.72 884.3 2143.44 618.45 6096.3 334.72
+Lung Cancer 12600 20.69 106.3 609.63 723.4 1163.09 6027.6 498.1
+In this section, a large number of experiments are conducted
+to verify the effectiveness of MF-CSO on eighteen real-world
+high-dimensional classification datasets. Specifically, the ex-
+perimental results in terms of the error rate and the number of
+selected features obtained by the proposed MF-CSO and sev-
+eral competitive EA-based FS methods are provided in Table
+III and Table IV, respectively, and the experimental results
+obtained by MF-CSO and three traditional filtering methods are
+summarized in Table V. In addition, the results of Wilcoxon
+significance tests with a significance level of 0.05 are presented
+in column S, where ‘+’, ‘-’ and ‘≈’ indicate that the compared
+method is better than, worse than, and similar to the proposed
+MF-CSO in terms of the error rate, respectively. All the ex-
+perimental results are obtained from 30 independent runs of
+tenfold cross-validation where the selected folds and the algo-
+rithm stochastic depend on the selected random seed, and the
+lowest error rate in each dataset is marked by boldface.
+1) Comparison with State-of-the-art EA-based FS Methods
+In terms of the error rates listed in Table III, MF-CSO
+achieves the best results in 11 out of 18 datasets. Particularly,
+MF-CSO shows obvious advantages over other competitors on
+five datasets, specifically, the ‘Leukemia 1’, ‘DLBCL’, ‘Pros-
+tate6033’, ’ ALLAML and ‘Leukemia 2’ datasets, as the error
+rates of MF-CSO on these five datasets are much lower than
+those of the other algorithms. In particular, the superiority of
+MF-CSO over non-EMT-based methods, i.e., FULL,
+SM-MOEA, PS-NSGA, CSO-FS and MOEA/D-FS, validates
+the effectiveness of using an efficient EMT technique. On the
+other hand, compared to two EMT-based FS methods (i.e.,
+PSO-EMT and MTPSO), MF-CSO shows clear advantages in
+most cases. Thus, the superior performance of MF-CSO over
+--- PAGE 10 ---
+10
+(a) (b) (c) (d)
+Fig. 7: The convergence profiles of compared algorithms over iterations on the (a) ‘DLBCL’, (b) ‘Leukemia 1’, (c) ‘Pros-
+tate6033’ and (d) ‘Leukemia 2’ datasets, respectively.
+Average CPU Running Time
+Times (s)
+160000
+140000
+120000
+100000
+80000
+60000
+40000
+20000
+0
+Dataset
+SM-MOEA PS-NSGA PSO-EMT MTPSO CSO-FS MOEAD-FS MF-CSO
+Fig. 8: The average CPU running time of the proposed MF-CSO and other EA-based FS methods over 30 independent runs.
+PSO-EMT and MTPSO verifies the effectiveness of the de-
+signed multiple task generation method and the modified CSO
+variant for solving high-dimensional FS problems. In addition,
+as summarized in the last column S, compared to the other
+seven competitive EA-based FS methods, our MF-CSO wins
+84 times, loses 8 times and draws 34 times out of all 126
+comparisons in terms of the test error rate.
+Furthermore, considering the number of selected features in
+Table IV, the number of the selected features obtained by
+SM-MOEA and PS-NSGA are less than that by MF-CSO for
+most of the adopted datasets because the former design spe-
+cialized strategies for fast dimensionality reduction. Specifi-
+cally, SM-MOEA adopts a dimensionality reduction operator
+to recursively downsize the number of selected features, and
+PS-NSGA uses a variation operator to achieve fast dimension-
+ality reduction. Although these two methods perform well in
+terms of dimensionality reduction, this feature will lead to a
+higher error rate in classification. As seen in Table IV, the error
+rates of MF-CSO are much lower than those of SM-MOEA and
+PS-NSGA in all adopted datasets except three datasets (i.e., the
+‘9 Tumors’, ‘Nci 9’ and ‘Adenocarcinoma’ datasets). When
+compared with other FS methods (i.e., FULL, PSO-EMT,
+MTPSO, CSO-FS and MOEA/D-FS), the numbers of selected
+features obtained by MF-CSO are the smallest on most adopted
+datasets.
+In summary, the experimental results listed in Tables III-IV
+verify the effectiveness of the proposed MF-CSO compared to
+seven EA-based FS methods for solving these eighteen adopted
+datasets in terms of accuracy and number of selected features.
+In addition, to visualize the convergence speed of each com-
+pared algorithm, the trends in error rates of each compared
+method over the iterations on the ‘DLBCL’, ‘Leukemia 1’,
+‘Prostate6033’ and ‘Leukemia 2’ datasets are plotted in Figs. 7
+(a)-(d), respectively. As learned from these figures, our pro-
+posed MF-CSO shows faster convergence speed and achieves
+better accuracy than the other compared methods.
+2) Comparison of CPU Running Time
+The training time is also an important criterion to evaluate
+the efficiency of an algorithm. Therefore, we further investigate
+the computational efficiency of MF-CSO and other EA-based
+FS methods. Fig. 8 provides the average CPU running time of
+MF-CSO and other EA-based FS methods over 30 independent
+runs. As shown in Fig. 8, MF-CSO shows the lowest running
+time in most of the datasets adopted. Specifically, MF-CSO
+shows similar runtimes to PSO-EMT, MTPSO, and CSO-FS,
+indicating that our multiple task generation and optimization
+strategies not only achieve good performance but also have low
+computational complexity. In addition, MF-CSO is signifi-
+cantly faster than the other three EA-based FS methods that do
+not use the EMT technique, namely, SM-MOEA, PS-NSGA,
+and MOEA/D-FS, which demonstrates the efficiency of using
+the EMT technique. The main reason behind this is that these
+three EA-based FS methods apply a multiobjective optimiza-
+tion framework for classifying high-dimensional datasets,
+which consumes a large amount of time to perform FS. In
+contrast, the EMT-based FS methods can generate promising
+FS tasks with a small number of features, which significantly
+reduces the computation time for each fitness evaluation during
+the FS process.
+--- PAGE 11 ---
+11
+TABLE V: COMPARISON BETWEEN MF-CSO AND THREE TRADITIONAL FILTERING METHODS
+Dataset Algorithm Size Error S Dataset Algorithm Size Error S
+warpPIE10P
+Relief-F 401 0.50 ≈
+PCC 282 1.5 ≈ TV 2242 0 ≈ MF-CSO 103.93 0.82 ALLAML
+Relief-F 508 4.17 ≈
+PCC 832 5.17 ≈
+TV 660 28.67 -
+MF-CSO 297.6 3.76
+Lymphoma
+Relief-F 343 0.92 ≈
+PCC 248 1.83 ≈ TV 521 0.84 ≈ MF-CSO 53.48 1.87 Nci9
+Relief-F 9709 50.00 -
+PCC 9700 53.33 -
+TV 7593 65.00 -
+MF-CSO 2354.4 46.00
+Nci
+Relief-F 548 16.43 +
+PCC 590 29.76 ≈ TV 397 24.77 + MF-CSO 273.46 28.77 Adenocarcinoma
+Relief-F 3789 37.5 -
+PCC 9670 36.88 -
+TV 657 40.12 -
+MF-CSO 523.31 34.44
+Leukemia 1
+orlraws10P
+Relief-F 1013 0 +
+PCC 1717 9.00 -
+TV 1161 8.00 -
+MF-CSO 322.51 3.70
+DLBCL
+Relief-F 436 6.33 +
+PCC 784 10.44 - TV 421 11.81 - MF-CSO 229.6 7.50 Relief-F 347 9.17 -
+Relief-F 815 28.34 -
+PCC 599 8.50 ≈ PCC 916 38.34 -
+Brain Tumor 2
+TV 458 11.67 - TV 989 27.50 -
+MF-CSO 96.5 7.50 MF-CSO 194.5 25.42
+9Tumor
+Relief-F 403 36.67 +
+PCC 899 56.67 ≈ TV 380 45.00 + MF-CSO 199.2 55.23 Prostate
+Relief-F 686 10.00 +
+PCC 983 17.67 -
+TV 1242 19.50 -
+MF-CSO 63.2 12.67
+TOX_171
+Relief-F 5474 14.75 -
+PCC 1371 26.59 - TV 319 27.00 - MF-CSO 1170.7 7.62 Leukemia2
+Relief-F 1167 3.89 -
+PCC 1679 16.11 -
+TV 734 7.22 -
+MF-CSO 373.4 1.67
+Brain Tumor 1
+Relief-F 519 24.75 ≈
+PCC 837 21.25 + TV 611 29.17 - MF-CSO 194.5 24.33 11 Tumor
+Relief-F 829 17.87 +
+PCC 1581 30.15 -
+TV 697 21.36 ≈
+MF-CSO 334.72 20.31
+Prostate6033
+Relief-F 518 10.00 ≈
+PCC 770 13.67 ≈ TV 657 17.83 - MF-CSO 212.13 12.82 Lung Cancer
+Relief-F 881 16.50 -
+PCC 2289 14.84 -
+TV 563 14.53 -
+MF-CSO 498.1 12.44
+3) Comparison with Traditional Filtering Methods
+Table V provides comparisons between the proposed
+MF-CSO and three traditional filtering methods, i.e., the Re-
+lief-F, PCC, and TV methods. Considering the error rate,
+MF-CSO obtains the best results in 9 out of 18 datasets. In
+particular, MF-CSO shows clear advantages on the ‘Adeno-
+carcinoma’, ‘Brain Tumor 2’, ‘Leukemia2’ and ‘Lung Cancer’
+datasets, as its error rates on these four datasets are much lower
+than those of the compared filtering methods. Moreover, when
+considering the performance on eight datasets with more than
+9500 features (i.e., from the ‘Nci 9’ to the ‘Lung Cancer’ da-
+tasets), MF-CSO obtains the best results in 5 out of 8 datasets.
+Therefore, the superior performance of MF-CSO on such
+high-dimensional datasets indicates that our proposed EMT
+technique with multiple filtering methods is more advantageous
+for solving high-dimensional FS problems. In summary, among
+54 comparisons in terms of the error rates, as shown in the last
+Column S, MF-CSO wins 30 times, loses 9 times and draws 15
+times. In contrast, as listed in the left column of Table V, when
+considering the error rates on the datasets with fewer than 6000
+features (i.e., from the ‘warpPIE10P’ to the ‘Prostate6033’
+datasets), our proposed MF-CSO shows slight disadvantages or
+similar performance compared to three traditional filtering
+methods. The reason for this result is that transferred particles
+from other tasks may mislead the evolution of the task when
+solving these datasets with relatively few features, thus de-
+grading the performance of MF-CSO. However, traditional
+filtering methods can perform an approximate screening of
+features by using a single metric to search for a promising
+feature subset and achieve good performance on datasets with a
+small number of features since the search space for these da-
+tasets is relatively small. It is worth noting that although the
+accuracies obtained by our proposed MF-CSO on these datasets
+with fewer than 6000 features are slightly worse than or similar
+to those of the Relief-F, PCC and TV methods, the number of
+features selected by MF-CSO is much smaller than that of these
+traditional filtering methods. In summary, the results in Table V
+demonstrate that the effectiveness of our proposed MF-CSO
+with multiple filtering methods becomes clearer as the number
+of features increases.
+On the other hand, when considering the number of selected
+features, MF-CSO can achieve significant advantages com-
+pared to the Relief-F, PCC, and TV methods, MF-CSO selects
+the least number of features on all adopted datasets. Therefore,
+the proposed MF-CSO based on the idea of EMT shows ad-
+vantages in terms of the error rate and the number of selected
+features on most datasets when compared to the three tradi-
+tional filtering methods.
+In summary, extensive empirical results demonstrate that our
+proposed MF-CSO not only shows clear advantages in terms of
+error rate reduction and dimensionality reduction but also has
+low computational costs compared to other EA-based FS
+--- PAGE 12 ---
+12
+TABLE VI: COMPARISONS BETWEEN MF-CSO AND ITS THREE VARIANTS
+Dataset Algorithm Size Error S Dataset Algorithm Size Error S
+warpPIE10P
+MF-CSO 103.93 0.82
+EMT-noKT 195.8 1.83 ≈ MF-CSO-R 118.5 0.89 ≈ MF-PSO 68.7 1.50 ≈ ALLAML
+MF-CSO 297.6 3.76
+EMT-noKT 274.7 8.67 -
+MF-CSO-R 298.9 9.50 -
+MF-PSO 199.6 11.17 -
+Lymphoma
+MF-CSO 53.48 1.87
+EMT-noKT 63.4 4.83 - MF-CSO-R 87.7 1.93 ≈ MF-PSO 13 5.00 - Nci9
+MF-CSO 2354.4 46.00
+EMT-noKT 3716.7 50.17 -
+MF-CSO-R 2260.3 53.59 -
+MF-PSO 3244.9 51.69 -
+Nci
+MF-CSO 273.46 28.77
+EMT-noKT 510.3 30.96 - MF-CSO-R 250.7 39.03 - MF-PSO 427.6 34.46 - Adenocarcinoma
+MF-CSO 523.31 34.44
+EMT-noKT 1165.4 35.53 ≈
+MF-CSO-R 338.2 38.22 -
+MF-PSO 1237.3 38.93 -
+Leukemia 1
+MF-CSO 229.6 7.5
+EMT-noKT 318.8 11.67 - MF-CSO-R 305.8 10.00 - MF-PSO 260.7 16.39 - orlraws10P
+MF-CSO 322.51 3.70
+EMT-noKT 362 7.00 -
+MF-CSO-R 397.2 2.00 ≈
+MF-PSO 571.1 4.00 ≈
+DLBCL
+MF-CSO 96.5 7.5
+EMT-noKT 110.2 9.17 ≈ MF-CSO-R 99.6 15.17 - MF-PSO 179.8 13.5 - Brain Tumor 2
+MF-CSO 194.5 25.42
+EMT-noKT 511.9 32.92 -
+MF-CSO-R 294.8 35.00 -
+MF-PSO 461.5 33.75 -
+9Tumor
+MF-CSO 199.2 55.23
+EMT-noKT 346.1 45.6 + MF-CSO-R 337.8 56.67 ≈ MF-PSO 369.9 56.38 ≈ Prostate
+MF-CSO 63.2 12.67
+EMT-noKT 308.2 13.00 ≈
+MF-CSO-R 304 13.50 ≈
+MF-PSO 561.4 14.00 ≈
+TOX_171
+MF-CSO 1170.7 7.62
+EMT-noKT 2559.3 9.25 ≈ MF-CSO-R 2408.1 7.75 ≈ MF-PSO 3408.6 7.62 ≈ Leukemia2
+MF-CSO 373.4 1.67
+EMT-noKT 430.2 11.11 -
+MF-CSO-R 291.4 8.33 -
+MF-PSO 268.7 11.11 -
+Brain Tumor 1
+MF-CSO 194.5 24.33
+EMT-noKT 1057 24.84 ≈ MF-CSO-R 217.1 27.31 - MF-PSO 276 23.64 ≈ 11 Tumor
+MF-CSO 334.72 20.31
+EMT-noKT 1514.7 25.79 -
+MF-CSO-R 1162.3 23.03 -
+MF-PSO 1237.3 21.15 ≈
+Prostate6033
+MF-CSO 212.13 12.82
+EMT-noKT 371.2 13.67 ≈ MF-CSO-R 245.8 14.83 - MF-PSO 493.2 13.83 ≈ Lung Cancer
+MF-CSO 498.1 12.44
+EMT-noKT 779.3 13.13 ≈
+MF-CSO-R 1773.4 23.62 -
+MF-PSO 1180.8 15.64 -
+methods.
+F. Ablation Experiment and Analysis
+1) The Effect of Knowledge Transfer in EMT: To investigate the
+effect of knowledge transfer in EMT, a variant of our proposed
+MF-CSO without performing knowledge transfer among rele-
+vant tasks, namely, EMT-noKT, is used here for performance
+comparison. That is, the tasks in EMT-noKT evolved sepa-
+rately without sharing useful knowledge. Table VI provides the
+average error rates and the numbers of selected features, where
+the better results are shown in boldface. As seen in Table VI,
+MF-CSO achieves lower error rates than EMT-noKT in all
+datasets except the ‘9 Tumors’ dataset. In particular, the error
+rate of MF-CSO for the ‘Leukemia2’ dataset is approximately
+10% lower than that of EMT-noKT. On the other hand, con-
+sidering the size of the selected features, MF-CSO selects fewer
+features than EMT-noKT for all 18 datasets. In summary, the
+comparisons between the proposed MF-CSO and EMT-noKT
+indicate the effectiveness of knowledge transfer by sharing
+useful knowledge among the relevant FS tasks.
+2) The Effect of CSO for Multitasking Optimization: To inves-
+tigate the effect of the modified CSO-based knowledge transfer
+method in our method, a variant of MF-CSO is designed for
+performance comparison by replacing CSO with PSO, namely,
+MF-PSO. Notably, the adopted PSO-based knowledge transfer
+method in MF-PSO is the same as that in PSO-EMT [13]. As
+seen from Table VI, MF-CSO shows lower error rates than
+MF-PSO in all adopted datasets except the ‘Brain Tumor 1’
+dataset. On the other hand, MF-CSO also performs better than
+MF-PSO in terms of dimensionality reduction on 14 out of 18
+datasets, except the ‘warpPIE10P’, ‘Lymphoma’, ‘ALLAML’
+and ‘Leukemia2’ datasets. In particular, for the ‘Brain Tumor 2’
+dataset, the number of features selected by MF-CSO is less than
+half of that selected by MF-PSO, and our error rate is reduced
+by approximately 10%. Therefore, the superior performance
+obtained by MF-CSO over MF-PSO demonstrates the effec-
+tiveness of our proposed CSO-based knowledge transfer
+method. That is, the modified CSO variant is more effective
+and suitable than PSO when processing high-dimensional da-
+tasets.
+3) The Effect of Aggregation Mechanism in Knowledge Trans-
+fer: To investigate the effect of the aggregation mechanism in
+our CSO-based knowledge transfer method, MF-CSO-R, which
+randomly selects a winner particle from one of the other three
+relevant tasks rather than using the aggregated winner particle
+from three relevant tasks to perform knowledge transfer, is
+designed for performance comparison. As shown in Table VI,
+the error rates obtained by MF-CSO are much lower than those
+of MF-CSO-R for 17 out of 18 datasets, and the error rate of
+MF-CSO on the ‘orlraws10P’ dataset is similar to that of
+MF-CSO-R. On the other hand, considering the size of the
+selected features, MF-CSO also shows advantages over
+MF-CSO-R in 14 out of 18 datasets except the ‘Nci’, ‘Nci9’,
+‘Adenocarcinoma’ and ‘Leukemia2’ datasets. In particular, for
+the ‘Lung Cancer’ dataset, MF-CSO selects only one-tenth of
+--- PAGE 13 ---
+13
+the features of MF-CSO-R, with a lower error rate of approx-
+imately 10%. Therefore, these comparison results between
+MF-CSO and MF-CSO-R validate the effectiveness of our
+aggregation mechanism during the knowledge transfer process,
+as it allows better exploration of correlations between several
+relevant tasks to generate more promising winner particles for
+each task.
+V. CONCLUSION AND FUTURE WORK
+This paper proposed an efficient EMT-based FS method by
+using multiple filtering methods and CSO, termed MF-CSO,
+which can effectively handle high-dimensional classification
+problems. The implementation of EMT in our method can
+improve the performance of solving high-dimensional classi-
+fication problems. In this method, the proposed multiple task
+generation strategy using multiple filtering methods can con-
+struct more diversified relevant tasks and has been validated to
+improve the effect of knowledge transfer in EMT when pro-
+cessing various kinds of high-dimensional datasets with dif-
+ferent characteristics. Moreover, an efficient multiple task
+optimization strategy using a modified CSO in our method has
+been validated as more suitable to perform knowledge transfer
+among the relevant FS tasks. With the above two strategies,
+solving the original FS task can be highly accelerated by
+transferring useful knowledge from other relevant FS tasks. A
+number of experimental results have been conducted to verify
+the effectiveness of our proposed MF-CSO in solving eighteen
+high-dimensional datasets with the number of features ranging
+from 2000 to 12000. Compared to several state-of-the-art FS
+algorithms and three traditional filtering methods, MF-CSO
+can not only obtain a feature subset of higher quality in terms of
+classification accuracy and number of selected features but also
+has low computational costs.
+Although the experimental results demonstrate that EMT is a
+promising technique for high-dimensional classification, it is
+meaningful and interesting to explore a general EMT frame-
+work to solve high-dimensional feature selection problems.
+Here, we provide the following outlook on possible improve-
+ments to this framework in terms of filtering methods and op-
+timizers.
+ Filtering method: In addition to the filtering methods used
+in this paper, more filtering methods with different charac-
+teristics can be embedded in the EMT framework to con-
+struct diverse FS tasks, thus improving the overall perfor-
+mance of processing various high-dimensional datasets. We
+give some suggestions for effective filtering methods that
+are not limited to them, which can be considered in the
+framework, such as symmetrical uncertainty [54], the
+Fisher score [55], and some extensions of Relief-F (e.g.,
+RRelief-F [56], ReliefMSS [57], etc.).
+ Optimizer: In addition to the CSO and PSO mentioned in
+this paper, we provide suggestions for efficient natu-
+ral-inspired optimizers with distinct properties that are not
+limited to them, which can be considered in the framework,
+such as the artificial immune algorithm [58], differential
+evolution algorithm [59], and ant colony algorithm [60].
+REFERENCES
+[1] H. Peng, F. Long, and C. Ding, “Feature Selection based on Mutual
+Information Criteria of Max-Dependency, Max-Relevance, and
+Min-Redundancy.” IEEE Transactions on Pattern Analysis and Machine
+Intelligence, vol. 27, no. 8, pp. 1226-1238, 2005.
+[2] J. Tang, S. Alelyani, and H. Liu, “Feature Selection for Classification: A
+Review,” Data classification: Algorithms and Applications, pp. 37,
+2014.
+[3] M. Robnik-Šikonja and I. Kononenko, “Theoretical and Empirical
+Analysis of ReliefF and RReliefF,” Machine Learning, vol. 53, nos. 1-2,
+pp. 23-69, 2003.
+[4] B. Mwangi, T.S. Tian, and J.C. Soares, “A Review of Feature Reduction
+Techniques in Neuroimaging,” Neuroinformatics, vol. 12, no. 2, pp.
+229-244, 2014.
+[5] S. Tabakhi, P. Moradi, and F. Akhlaghian, “An Unsupervised Feature
+Selection Algorithm Based on Ant Colony Optimization,” Engineering
+Applications of Artificial Intelligence, vol. 32, pp. 112-123, Jun. 2014.
+[6] Y. Zhou, W. Zhang, J. Kang, X. Zhang, and X. Wang, “A Prob-
+lem-specific Non-dominated Sorting Genetic Algorithm for Supervised
+Feature Selection,” Information Sciences, vol. 547, pp. 841-859, Feb.
+2021.
+[7] F. Cheng, F. Chu, Y. Xu, and L. Zhang, “A Steering-Matrix-Based
+Multiobjective Evolutionary Algorithm for High-Dimensional Feature
+Selection,” IEEE Transactions on Cybernetics, pp. 1-14, 2021.
+[8] R. Eberhart and J. Kennedy, “A New Optimizer using Particle Swarm
+Theory,” in Proc. 6th International Symposium Micro Machine & Hu-
+man Science, Nagoya, Japan, pp. 39-43, 1995.
+[9] H. Liu, M. Zhou, and Q. Liu, “An Embedded Feature Selection Method
+for Imbalanced Data Classification,” IEEE/CAA Journal of Automatica
+Sinica, vol. 6, no. 3, pp. 703-715, May 2019.
+[10] S. Wang and W. Zhu, “Sparse Graph Embedding Unsupervised Feature
+Selection,” IEEE Transactions on Systems, Man, and Cybernetics: Sys-
+tems, vol. 48, no. 3, pp. 329-341, March 2018.
+[11] J. Chen, T. Li, Y. Zou, G. Wang, H. Ye, and F. Lv, “An Ensemble
+Feature Selection Method for Short-Term Electrical Load Forecasting,”
+in 2019 IEEE 3rd Conference on Energy Internet and Energy System
+Integration (EI2), pp. 1429-1432, 2019.
+[12] X.F. Song, Y. Zhang, D.W. Gong, and X.Z. Gao, “A Fast Hybrid Feature
+Selection Based on Correlation-Guided Clustering and Particle Swarm
+Optimization for High-Dimensional Data,” IEEE Transactions on Cy-
+bernetics, pp. 1-14, 2021.
+[13] K. Chen, B. Xue, M. Zhang, and F. Zhou, “An Evolutionary Multitask-
+ing-Based Feature Selection Method for High-Dimensional Classifica-
+tion,” IEEE Transactions on Cybernetics, doi:
+10.1109/TCYB.2020.3042243.
+[14] Q. Song, J. Ni, and G. Wang, “A Fast Clustering-based Feature Subset
+Selection Algorithm for High Dimensional Data,” IEEE Transactions on
+Knowledge Data Engineering, vol. 25, no. 1, pp. 1-14, Jan. 2013.
+[15] B. Tran, B. Xue, and M. Zhang, “A New Representation in PSO for
+Discretization-Based Feature Selection,” IEEE Transactions on Cyber-
+netics, vol. 48, no. 6, pp. 1733-1746, Jun. 2018.
+[16] B. Tran, B. Xue, and M. Zhang, “Variable-Length Particle Swarm Op-
+timization for Feature Selection on High-Dimensional Classification,”
+IEEE Transactions on Evolutionary Computation, vol. 23, no. 3, pp.
+473-487, Jun. 2019.
+[17] V.A. Shim, K.C. Tan, and H. Tang, “Adaptive Memetic Computing for
+Evolutionary Multiobjective Optimization,” IEEE Transactions on Cy-
+bernetics, vol. 45, no. 4, pp. 610-621, April 2015.
+[18] X. Qiu, J.X. Xu, Y. Xu, and K. C. Tan, “A New Differential Evolution
+Algorithm for Minimax Optimization in Robust Design,” IEEE Trans-
+actions on Cybernetics, vol. 48, no. 5, pp. 1355-1368, May 2018.
+[19] K. Chen, B. Xue, M. Zhang, and F. Zhou, “Novel Chaotic Grouping
+Particle Swarm Optimization with a Dynamic Regrouping Strategy for
+Solving Numerical Optimization Tasks,” Knowledge-Based Systems, vol.
+194, 105568, 2020.
+[20] A. Gupta, Y.S. Ong, and L. Feng, “Multifactorial Evolution: Toward
+Evolutionary Multitasking,” IEEE Transactions on Evolutionary Com-
+putation, vol. 20, no. 3, pp. 343-357, Jun. 2016.
+--- PAGE 14 ---
+[21] K. Chen, B. Xue, M. Zhang, and F. Zhou, “Evolutionary Multitasking for
+Feature Selection in High-dimensional Classification via Particle Swarm
+Optimisation,” IEEE Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2021.3100056.
+[22] Y. Tian, X. Zheng, X. Zhang, and Y. Jin, “Efficient Large-scale Multi-
+objective Optimization Based on a Competitive Swarm Optimizer,”
+IEEE Transactions on Cybernetics., vol. 50, no. 8, pp. 3696-3708, 2020.
+[23] C. Wang, J. Liu, K. Wu, and Z. Wu, “Solving Multitask Optimization
+Problems with Adaptive Knowledge Transfer via Anomaly Detection,”
+IEEE Transactions on Evolutionary Computation, vol. 26, no. 2, pp.
+304-318, April 2022.
+[24] Z. Liang, W. Liang, Z. Wang, X. Ma, L. Liu, and Z. Zhu, “Multiobjective
+Evolutionary Multitasking with Two-stage Adaptive Knowledge Trans-
+fer Based on Population Distribution,” IEEE Transactions on Systems,
+Man, and Cybernetics: Systems, doi: 10.1109/TSMC.2021.3096220.
+[25] B. S. Da, A. Gupta, Y. S. Ong, and L. Feng, “The Boon of Gene-culture
+Interaction for Effective Evolutionary Multitasking,” Lecture Notes in
+Computer Science, 9592. Cham, Switzerland: Springer, pp. 54-65, Feb.
+2016.
+[26] C. E. Yang, J. L. Ding, K. C. Tan, and Y. C. Jin, “Two-stage Assortative
+Mating for Multi-objective Multifactorial Evolutionary Optimization,” in
+Proc. IEEE 56th Annual Conference on Decision and Control (CDC),
+Melbourne, VIC, Australia, pp. 76-81, Dec. 2017.
+[27] M. G. Gong, Z. D. Tang, H. Li, and J. Zhang, “Evolutionary Multitasking
+with Dynamic Resource Allocating Strategy,” IEEE Transactions on
+Evolutionary Computation. vol. 23, no. 5, pp. 858-869, Oct. 2019.
+[28] K. K. Bali, Y.-S. Ong, A. Gupta, and P. S. Tan, “Multifactorial Evolu-
+tionary Algorithm with Online Transfer Parameter Estimation: MFEA-II,”
+IEEE Transactions on Evolutionary Computation. vol. 24, no. 1, pp.
+69-83, Feb. 2020.
+[29] L. Feng et al., “An Empirical Study of Multifactorial PSO and Multi-
+factorial DE,” in Proc. IEEE Congress on Evolutionary Computation
+(CEC), Donostia, Spain, pp. 921-928, Jun. 2017.
+[30] Z. D. Tang and M. G. Gong, “Adaptive Multifactorial Particle Swarm
+Optimisation,” CAAI Transactions on Intelligence Technology, vol. 4, no.
+1, pp. 37-46, Mar. 2019.
+[31] H. Song, A. K. Qin, P.W. Tsai, and J.J. Liang, “Multitasking Multiswarm
+Optimization,” in Proc. IEEE Congress on Evolutionary Computation
+(CEC), Wellington, New Zealand, Jun. 2019, pp. 1937-1944.
+[32] L. Zhou, L. Feng, J. Zhong, Y.S. Ong, Z. Zhu, and E. Sha, "Evolutionary
+Multitasking in Combinatorial Search Spaces: A Case Study in Capaci-
+tated Vehicle Routing Problem," in 2016 IEEE Symposium Series on
+Computational Intelligence (SSCI), pp. 1-8, 2016.
+[33] F. Zhang, Y. Mei, S. Nguyen, M. Zhang, and K. C. Tan, “Surro-
+gate-Assisted Evolutionary Multitask Genetic Programming for Dy-
+namic Flexible Job Shop Scheduling,” IEEE Transactions on Evolu-
+tionary Computation, vol. 25, no. 4, pp. 651-665, Aug. 2021.
+[34] F. Shen, J. Liu, and K. Wu, “Evolutionary Multitasking Network Re-
+construction from Time Series with Online Parameter Estimation,”
+Knowledge-Based Systems, vol. 222, 107019, Jun. 2021.
+[35] R. Cheng and Y. Jin, “A Competitive Swarm Optimizer for Large Scale
+Optimization,” IEEE Transactions on Cybernetics, vol. 45, no. 2, pp.
+191-204, Feb. 2015.
+[36] X. Wang, K. Zhang, J. Wang, and Y. Jin, “An Enhanced Competitive
+Swarm Optimizer with Strongly Convex Sparse Operator for Large-scale
+Multi-objective Optimization,” IEEE Transactions on Evolutionary
+Computation, doi: 10.1109/TEVC.2021.3111209.
+[37] Y. Tian, X. Zheng, X. Zhang, and Y. Jin, “Efficient Large-scale Multi-
+objective Optimization Based on a Competitive Swarm Optimizer,”
+IEEE Transactions on Cybernetics, vol. 50, no. 8, pp. 3696-3708, Aug.
+2020.
+[38] K. Deb and H. Jain, “An Evolutionary Many-objective Optimization
+Algorithm Using Reference-point-based Nondominated Sorting Ap-
+proach, Part I: Solving Problems with Box Constraints,” IEEE Transac-
+tions on Evolutionary Computation. vol. 18, no. 4, pp. 577-601, Aug.
+2014.
+[39] H. Xu, B. Xue, and M. Zhang, “A Duplication Analysis-Based Evolu-
+tionary Algorithm for Biobjective Feature Selection,” IEEE Transactions
+on Evolutionary Computation, vol. 25, no. 2, pp. 205-218, April 2021.
+14
+[40] K. Chen, F.Y. Zhou, and X.F. Yuan, “Hybrid Particle Swarm Optimiza-
+tion with Spiral-shaped Mechanism for Feature Selection,” Expert Sys-
+tems with Applications, vol. 128, pp. 140-156, Aug. 2019.
+[41] S. Liu, Q. Lin, L. Feng, K.C. Wong, and K. C. Tan, “Evolutionary
+Multitasking for Large-Scale Multiobjective Optimization,” IEEE
+Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2022.3166482.
+[42] X. Wang, Z. Dong, L. Tang, and Q. Zhang, “Multiobjective Multitask
+Optimization -Neighborhood as a Bridge for Knowledge Transfer,” IEEE
+Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2022.3154416.
+[43] J.Y. Li, Z.H. Zhan, K. C. Tan, and J. Zhang, “A Meta-Knowledge
+Transfer-based Differential Evolution for Multitask Optimization,” IEEE
+Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2021.3131236.
+[44] Das, I, “On Characterizing the “knee” of the Pareto Curve based on
+Normal-Boundary Intersection.” Structural Optimization, vol. 18, nos.
+2-3, pp. 107-115, 1999.
+[45] X. Zhang, Y. Tian, R. Cheng and Y. Jin, “A Decision Variable Cluster-
+ing-Based Evolutionary Algorithm for Large-Scale Many-Objective
+Optimization, ” IEEE Transactions on Evolutionary Computation, vol.
+22, no. 1, pp. 97-112, Feb 2018.
+[46] L. Ma, M. Huang, S. Yang, R. Wang and X. Wang, “An Adaptive Lo-
+calized Decision Variable Analysis Approach to Large-Scale Multi-
+objective and Many-Objective Optimization, ” IEEE Transactions on
+Cybernetics, vol. 52, no. 7, pp. 6684-6696, July 2022.
+[47] Y. Tian, C. Lu, X. Zhang, F. Cheng, and Y. Jin, “A Pattern Mining Based
+Evolutionary Algorithm for Large-Scale Sparse Multi-Objective Opti-
+mization Problems ” IEEE Transactions on Cybernetics, doi:
+10.1109/TCYB.2020.3041325.
+[48] X. Yao, Q. Zhao, D. Gong and S. Zhu, “Solution of Large-scale
+Many-objective Optimization Problems Based on Dimension Reduction
+and Solving Knowledge Guided Evolutionary Algorithm,” IEEE
+Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2021.3110780.
+[49] Y. Tian, L. Si, X. Zhang, R. Cheng, C. He, K. Tan and Y. Jin, “Evolu-
+tionary Large-Scale Multi-Objective Optimization: A Survey.” ACM
+Computing Surveys, vol. 54, no. 8, pp.1-31, June 2021.
+[50] S. Liu, J. Li, Q. Lin, Y. Tian and K. C. Tan, “Learning to Accelerate
+Evolutionary Search for Large-Scale Multiobjective Optimization,”
+IEEE Transactions on Evolutionary Computation, doi:
+10.1109/TEVC.2022.3155593.
+[51] B. Xue, M. Zhang, and W.N. Browne, “Particle Swarm Optimisation for
+Feature Selection in Classification: Novel Initialisation and Updating
+Mechanisms,” Applied Soft Computing, vol. 18, pp. 261-276, May 2014.
+[52] G. Patterson and M. Zhang, “Fitness Functions in Genetic Programming
+for Classification with Unbalanced Data,” in Proc. 20th Australian Joint
+Conference on Artificial Intelligence, pp. 769-775, 2007.
+[53] Q. Zhang and H. Li, “MOEA/D: A Multiobjective Evolutionary Algo-
+rithm Based on Decomposition,” IEEE Transactions on Evolutionary
+Computation, vol. 11, no. 6, pp. 712-731, Dec. 2007.
+[54] W. Press, S. Teukolsky, W. Vetterling, and F. Brian, Numerical Recipes
+in C, 2nd ed. New York, NY, USA: Cambridge Univ. Press, 1992.
+[55] Q.Q. Gu, Z.H. Li, and J.W. Han, “Generalized fisher score for feature
+selection,” Conference on Uai. AUAI Press, pp. 266-273, 2012.
+[56] M. Robnik-Sikonjia and I. Kononenko, “An adaption of Relief for at-
+tribute estimation in regression,” International Conference on Machine
+Learning, pp. 296-304, 1997.
+[57] S. Chikhi, S. Benhammada, “ReliefMSS: a variation on a feature ranking
+ReliefF,” International Journal of Business Intelligence & Data Mining,
+vol. 4, no. 3-4, pp. 375-390, 2009.
+[58] L.J. Li, Q.Z. Lin, and Z. Ming, “A survey of artificial immune algorithms
+for multi-objective optimization,” Nuerocomputing, vol. 489, pp. 211-
+229, 2022.
+[59] W. Wang, H. -L. Liu and K. C. Tan, “A Surrogate-Assisted Differential
+Evolution Algorithm for High-Dimensional Expensive Optimization
+Problems,” IEEE Transactions on Cybernetics, 2022, doi:
+10.1109/TCYB.2022.3175533.
+--- PAGE 15 ---
+15
+[60] X. Xiang, Y. Tian, X. Zhang, J. Xiao and Y. Jin, “A Pairwise Proximity
+Learning-Based Ant Colony Algorithm for Dynamic Vehicle Routing
+Problems,” IEEE Transactions on Intelligent Transportation Systems,
+vol. 23, no. 6, pp. 5275-5286, June 2022.
+Lingjie Li received the B.S. degree from Shandong
+Technology and Business University, Yantai, China
+in 2017 and the M.S. degree from Shenzhen Univer-
+sity, Shenzhen, China in 2020, where he is currently
+pursuing his Ph.D. in the College of Computer Sci-
+ence and Software Engineering.
+He visited University of Exeter, Exeter, UK, as a
+visiting student in 2019. He focuses on research in the
+area of evolutionary computation, including algo-
+rithm studies on multi/many-objective optimization,
+large-scale optimization, and application studies on
+feature selection, cloud/edge computing, and remote sensing hyperspectral
+Zhong Ming received the Ph.D. degree in Com-
+puter Science and Technology from the Sun
+Yat-Sen University, Guangzhou, China, in 2004.
+He is currently the Executive Director of the
+Graduate School of Shenzhen University, and a
+Professor with the National Engineering Laboratory
+for Big Data System Computing Technology and
+the College of Computer Science and Software
+Engineering, Shenzhen University, Shenzhen,
+China. His research interests include software
+engineering and artificial intelligence. He has published more than 200 refereed
+international conference and journal papers (including 40+ ACM/IEEE
+Transactions papers). He was the recipient of the ACM TiiS 2016 Best Paper
+Award and some other best paper awards.
+images.
+Manlin Xuan received the B.S. degree from
+Shandong University of Science and Technology,
+Qingdao, China in 2020. She is currently a master
+student in the College of Computer Science and
+Software Engineering, Shenzhen University.
+Her current research interests include multi-
+objective optimization, evolutionary algorithms,
+evolutionary multitasking algorithms, and their
+applications to feature selection.
+Kay Chen Tan (Fellow, IEEE) received the B.Eng.
+degree (First Class Hons.) and the Ph.D. degree from
+the University of Glasgow, U.K., in 1994 and 1997,
+respectively.
+He is currently a Chair Professor (Computational
+Intelligence) of the Department of Computing, the
+Hong Kong Polytechnic University. He has pub-
+lished over 300 refereed articles and seven books.
+Prof. Tan is currently the Vice-President (Publi-
+cations) of IEEE Computational Intelligence Society, USA. He served as the
+Editor-in-Chief of the IEEE Computational Intelligence Magazine from 2010
+to 2013 and the IEEE TRANSACTIONS ON EVOLUTIONARY
+COMPUTATION from 2015 to 2020. He currently serves as an Editorial Board
+Member for more than ten journals. Prof. Tan is an IEEE Distinguished Lec-
+turer Program (DLP) Speaker and the Chief Co-Editor of Springer Book Series
+on Machine Learning: Foundations, Methodologies, and Applications.
+Qiuzhen Lin (Member IEEE) received the B.S.
+degree from Zhaoqing University and the M.S.
+degree from Shenzhen University, China, in 2007
+and 2010, respectively. He received the Ph.D. de-
+gree from Department of Electronic Engineering,
+City University of Hong Kong, Kowloon, Hong
+Kong, in 2014.
+He is currently an associate professor in College
+of Computer Science and Software Engineering,
+Shenzhen University. His current research interests
+include artificial immune system, multi-objective
+optimization, and dynamic system.
+Prof. Lin has published over sixty research papers since 2008 and is currently
+serving as an Associate Editor for the IEEE TRANSACTIONS ON
+EVOLUTIONARY COMPUTATION.
+Min Jiang (Senior Member, IEEE) received the
+bachelor’s and Ph.D. degrees in computer science
+from Wuhan University, Wuhan, China, in 2001
+and 2007, respectively. Subsequently, he is a
+Postdoctoral Researcher with the Department of
+Mathematics, Xiamen University, Xiamen, China,
+where he is currently a Professor with the De-
+partment of Artificial Intelligence. His main
+research interests are machine learning, computa-
+tional intelligence, and robotics. He has a special
+interest in dynamic multiobjective optimization,
+transfer learning, software development, and in the basic theories of robotics.
+Prof. Jiang received the Outstanding Reviewer Award from IEEE
+TRANSACTIONS ON CYBERNETICS in 2016. He is the Chair of the IEEE
+CIS Xiamen Chapter. He is currently serving as an Associate Editor for the
+IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING
+SYSTEMS and IEEE TRANSACTIONS ON COGNITIVE AND
+DEVELOPMENTAL SYSTEMS.

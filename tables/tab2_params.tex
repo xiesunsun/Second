@@ -1,0 +1,42 @@
+\begin{table}[!t]
+\centering
+\begin{threeparttable}
+\caption{Parameter Settings of the Compared Algorithms and the Proposed Method.}
+\label{tab:params}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}ll>{\raggedright\arraybackslash}p{4.85cm}@{}}
+\toprule
+Category & Algorithm & Parameter Settings \\
+\midrule
+\multirow{4}{*}{EA / Swarm}
+  & GA~\cite{holland1992ga} & $N_p{=}20$ (high-dim) / $16$ (clin.), elitism $= 2$, binary tournament, $p_c{=}0.9$, $p_m{=}\max(1/p, 0.005)$ (high-dim) / $0.05$ (clin.), cardinality repair $\le K$. \\
+  & BPSO~\cite{kennedy1997bpso} & $N_p{=}20$ / $16$, $c_1{=}c_2{=}1.5$, inertia $w: 0.9 \to 0.4$, $v \in [-4, 4]$, sigmoid transfer, repair $\le K$. \\
+  & EDA~\cite{baluja1994pbil} & PBIL gen.\ size $=16$, top-$25\%$ elite update, learning rate $\alpha{=}0.2$, probability clip $[0.005, 0.95]$. \\
+  & MEL~\cite{wang2024mel} & Original multitask evolutionary learning schedule ($N_p{=}20$, dual sub-swarms, importance-guided transfer), evaluated strictly under identical budget $B$ and cap $K$. \\
+\midrule
+\multirow{4}{*}{\shortstack[l]{Filter /\\Embedded}}
+  & mRMR~\cite{peng2005mrmr} & Z-scored training features; vectorized F-stat relevance minus mean $|r|$ redundancy (top-$\min(p,\max(512,2K))$ screen); select top-$K$. \\
+  & ReliefF~\cite{kononenko1994relieff} & Z-scored training features; Manhattan distance, $k{=}\min(5, n_{\min}{-}1)$ nearest hits/misses; top-$K$. \\
+  & L1-LR~\cite{tibshirani1996lasso} & Z-scored training features; native 3-fold stratified L1-LR CV over $C \in \{0.05,\dots,25\}$ (clin.) / $\{0.1,0.5,1,5\}$ (high-dim); top-$\min(K,\text{nz})$ by $|\beta_j|$.\tnote{a} \\
+  & RF-Imp~\cite{breiman2001rf} & Z-scored training features; 100 balanced trees, Gini importance; select top-$K$. \\
+\midrule
+\multirow{4}{*}{\shortstack[l]{Prior /\\LLM-FS}}
+  & $\pi$BO~\cite{hvarfner2022pibo} & RF surrogate (32 trees, max depth 6), EI $\times\,\pi(\mathbf{x})^{\beta/t}$ ($\beta{=}10$), 4 random prior-marginal initial draws (faithful to~\cite{hvarfner2022pibo}), 96 candidates/step. \\
+  & LLM-Lasso~\cite{zhang2025llmlasso} & \texttt{gemini-3.8-flash} penalties $w_j \in [1,5]$ (batched $\le 30$/call), $\alpha \in \{0.5,1,2\}$, native 3-fold L1-LR CV on Z-scored features.\tnote{a} \\
+  & LSP-Adp.\tnote{b} & \texttt{gemini-3.8-flash} relevance scores $s_j \in [0,1]$, adaptive weights $s_j^{-\eta}$ ($\eta \in \{0,0.5,1,2,4\}$), native 3-fold L1-LR CV.\tnote{a} \\
+  & LLM-Select~\cite{jeong2024llmselect} & Zero-shot static top-$K$ from \texttt{gemini-3.8-flash} (Rank: 1 call/task; Score: batched $\le 30$/call, native $p$ calls/task); non-adaptive reference. \\
+\midrule
+\multirow{2}{*}{\shortstack[l]{Proposed}}
+  & SP-PD-Num & Non-semantic evolutionary core: multi-scale projected initialization, rank-guided recombination, 4-niche behavioral elite archive, $B \le 1{,}000$. \\
+  & \textbf{SP-PD} & 1 offline \texttt{gemini-3.8-flash} top-8 call/task ($T{=}0$), anchor-seeded evolutionary search, paired McNemar delivery gate $\tau{=}1.5$ ($D^2 > 2.25m$). \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] Native L1-LR, LLM-Lasso, and LSP-Adapted select hyperparameters strictly via native 3-fold stratified L1-LR CV without accessing the wrapper inner-CV oracle; when L1 shrinks all coefficients to zero ($\text{nz}{=}0$), they fall back to univariate Z-score correlation rather than static LLM rankings.
+\item[b] Adapted from Bayesian LLM sparsity-prior discounting into the exact weighted-L1 cross-validation protocol.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

@@ -1,0 +1,39 @@
+\begin{table}[!t]
+\centering
+\begin{threeparttable}
+\caption{Cross-Classifier BA (\%) at $n = 30$}
+\label{tab:clinical_downstream}
+\scriptsize
+\setlength{\tabcolsep}{3.6pt}
+\renewcommand{\arraystretch}{1.07}
+\begin{tabular}{@{}lrrr@{\hspace{8pt}}rrr@{}}
+\toprule
+ & \multicolumn{3}{c}{Logistic Regression} & \multicolumn{3}{c}{Random Forest} \\
+\cmidrule(lr{8pt}){2-4} \cmidrule(l){5-7}
+Algorithm & Aln. & Mis. & Mean & Aln. & Mis. & Mean \\
+\midrule
+GA                 & 64.60\rlap{\textsuperscript{*}} & -- & 64.60\rlap{\textsuperscript{*}} & 62.35\rlap{\textsuperscript{*}} & -- & 62.35\rlap{\textsuperscript{*}} \\
+BPSO               & 64.95\rlap{\textsuperscript{*}} & -- & 64.95 & 62.88\rlap{\textsuperscript{*}} & -- & 62.88 \\
+EDA                & 64.89 & -- & 64.89 & 62.63\rlap{\textsuperscript{*}} & -- & 62.63 \\
+MEL                & 65.33 & -- & 65.33 & 63.24 & -- & 63.24 \\
+mRMR               & 65.26 & -- & 65.26 & 63.44 & -- & 63.44 \\
+ReliefF            & 64.91\rlap{\textsuperscript{*}} & -- & 64.91 & 62.64\rlap{\textsuperscript{*}} & -- & 62.64\rlap{\textsuperscript{*}} \\
+L1-LR              & 65.17\rlap{\textsuperscript{*}} & -- & 65.17\rlap{\textsuperscript{*}} & 63.25 & -- & 63.25 \\
+RF-Imp             & 65.11 & -- & 65.11 & 63.03 & -- & 63.03 \\
+\midrule
+$\pi$BO            & 65.71 & 64.48 & 65.09 & 63.32 & 62.40 & 62.86 \\
+LLM-Lasso          & 66.11 & 64.84 & 65.48 & 64.11 & 62.74 & 63.42 \\
+LSP                & 65.61 & 64.91 & 65.26 & 63.88 & 62.73 & 63.30 \\
+LLM-Select (Rank)  & 66.54 & 59.02\rlap{\textsuperscript{*}} & 62.78\rlap{\textsuperscript{*}} & 63.87 & 58.65\rlap{\textsuperscript{*}} & 61.26\rlap{\textsuperscript{*}} \\
+LLM-Select (Score) & \textbf{67.40} & 58.98\rlap{\textsuperscript{*}} & 63.19 & \textbf{64.50} & 58.52\rlap{\textsuperscript{*}} & 61.51 \\
+\midrule
+SP-PD              & 66.05 & \textbf{65.45} & \textbf{65.75} & 63.88 & \textbf{63.46} & \textbf{63.67} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item Aln., Mis., and Mean denote aligned, misaligned, and average BA; prior-independent baselines satisfy Aln. = Mis. = Mean.
+\item[*] SP-PD significantly outperforms the baseline (Wilcoxon, $\alpha = 0.05$).
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

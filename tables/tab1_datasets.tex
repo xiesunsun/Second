@@ -1,0 +1,44 @@
+\begin{table*}[!b]
+\centering
+\begin{threeparttable}
+\caption{Properties of the 36 Adopted Datasets}
+\label{tab:datasets}
+\scriptsize
+\setlength{\tabcolsep}{7.2pt}
+\renewcommand{\arraystretch}{1.06}
+\begin{tabular}{@{}lrrrr@{\hspace{28pt}}lrrrr@{}}
+\toprule
+Dataset & \#Features & \#Instances & \#Classes & Min/Max (\%) &
+Dataset & \#Features & \#Instances & \#Classes & Min/Max (\%) \\
+\midrule
+\multicolumn{10}{@{}l}{\textbf{High-Dimensional Benchmarks}} \\
+\addlinespace[2pt]
+arcene            & 10,000 &   200 &  2 & 44.0 / 56.0 & ORL      & 1,024 &   400 & 40 &  2.5 / 2.5  \\
+Gutenberg         &  8,266 &   590 &  7 &  3.2 / 32.0 & qsar     & 1,024 &   768 &  2 & 11.7 / 88.3 \\
+DrivFace          &  6,400 &   606 &  3 &  4.5 / 90.1 & cmu      &   960 &   475 &  2 & 49.9 / 50.1 \\
+DLBCL\tnote{a}    &  5,469 &    77 &  2 & 24.7 / 75.3 & CNAE-9   &   856 & 1,052 &  9 & 10.6 / 11.4 \\
+dbworld           &  4,702 &    61 &  2 & 44.3 / 55.7 & isolet   &   617 & 1,551 & 26 &  3.8 / 3.9  \\
+relathe           &  4,322 & 1,425 &  2 & 45.4 / 54.6 & wifi     &   520 &   768 &  3 & 27.0 / 41.3 \\
+lymphoma\tnote{a} &  4,026 &    96 &  9 &  2.1 / 47.9 & madelon  &   500 & 2,245 &  2 & 50.0 / 50.0 \\
+lung              &  3,312 &   203 &  5 &  3.0 / 68.5 & scadi    &   205 &    67 &  5 &  4.5 / 43.3 \\
+warpPIE10P        &  2,420 &   210 & 10 & 10.0 / 10.0 & gesture  &   128 &   338 & 26 &  3.8 / 3.8  \\
+sms               &  1,354 &   766 &  2 & 12.4 / 87.6 & plaid    &   128 &   768 & 11 &  2.5 / 16.4 \\
+malware           &  1,084 & 2,878 &  2 & 16.7 / 83.3 & ecg      &    96 &   200 &  2 & 33.5 / 66.5 \\
+COIL20            &  1,024 & 1,440 & 20 &  5.0 / 5.0  & sports   &    57 &   588 &  2 & 36.4 / 63.6 \\
+\midrule
+\multicolumn{10}{@{}l}{\textbf{Clinical Datasets}} \\
+\addlinespace[2pt]
+voice             &    753 &   252 &  2 & 25.4 / 74.6 & thyroid    &  14 & 3,689 &  2 &  7.9 / 92.1 \\
+cad               &     55 &   303 &  2 & 28.7 / 71.3 & whas       &  13 &   499 &  2 & 27.7 / 72.3 \\
+ercp              &     23 &   569 &  2 & 12.8 / 87.2 & colontrial &  10 &   898 &  2 & 32.7 / 67.3 \\
+brf               &     21 & 226,342 & 2 & 14.8 / 85.2 & actg      &   9 &   928 &  2 &  8.3 / 91.7 \\
+thor              &     16 &   470 &  2 & 14.9 / 85.1 & gargle     &   9 &   233 &  2 & 27.5 / 72.5 \\
+opttrial          &     16 &   793 &  2 & 10.3 / 89.7 & gbsg       &   8 &   623 &  2 & 26.5 / 73.5 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] DLBCL and lymphoma belong to the same gene-expression source family and are averaged into one independent group for statistical testing.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

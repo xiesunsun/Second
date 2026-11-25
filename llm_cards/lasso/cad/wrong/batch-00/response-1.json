@@ -1,0 +1,38 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"penalties\": {\"F0\": 2, \"F1\": 3, \"F2\": 4, \"F3\": 3, \"F6\": 2, \"F7\": 4, \"F8\": 5, \"F11\": 1, \"F13\": 5, \"F14\": 4, \"F17\": 2, \"F20\": 4, \"F21\": 3, \"F22\": 4, \"F23\": 5, \"F24\": 5, \"F25\": 3, \"F28\": 5, \"F31\": 5, \"F37\": 5, \"F40\": 4, \"F42\": 4, \"F43\": 1, \"F45\": 2, \"F47\": 1, \"F48\": 4, \"F49\": 4, \"F50\": 4, \"F51\": 4, \"F52\": 3}}",
+            "thoughtSignature": "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"
+          }
+        ]
+      },
+      "finishReason": "STOP"
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 740,
+    "candidatesTokenCount": 238,
+    "totalTokenCount": 1819,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 740
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 238
+      }
+    ],
+    "thoughtsTokenCount": 841
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "createTime": "2026-11-24T03:09:22.845735Z",
+  "responseId": "4v8Ea6fPM7C0pt8P5YGV-Qc"
+}
